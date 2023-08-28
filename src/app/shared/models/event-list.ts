@@ -1,13 +1,9 @@
 export interface EventList {
-  wellName: string;
-  eventLevel: string;
-  date: Date;
-  desc: string;
-}
+  WellName: string;
+  Priority: string;
+  CreationDateTime: Date;
+  EventDescription: string;
+  EventStatus:string;
+  EventType:string;
 
-// export interface EventList {
-//   wellName: string;
-//   eventLevel: string;
-//   date: Date;
-//   desc: string;
-// }
+}

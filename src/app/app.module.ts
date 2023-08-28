@@ -52,7 +52,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,8 +61,8 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     RouterModule,
     AppRoutingModule,
-    SharedModule
-    
+    SharedModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

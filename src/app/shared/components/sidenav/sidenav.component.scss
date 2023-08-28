@@ -867,6 +867,18 @@ button.mat-mdc-menu-trigger.userbutton {
   }
 }
 
+mat-nav-list {
+  mat-list-item.active-list-item {
+    background: rgb(2 14 76);
+
+    span {
+      border-left: 2px solid rgba(250, 187, 66, 1) !important;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;

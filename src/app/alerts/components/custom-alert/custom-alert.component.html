@@ -1,0 +1,109 @@
+<div class="main-container">
+    <div class="row">
+        <div class="col-md-6">
+            <form [formGroup]="customAlertForm" (ngSubmit)="onSubmit()">
+            <div class="lefthead">
+                <h3>Create New Custom Alert</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <mat-checkbox formControlName="IsActive" [(ngModel)]="isActive">Is Active</mat-checkbox>
+                      </p>
+                    <p>Custom Alert Name</p>
+                    <mat-form-field appearance="outline" >                       
+                        <input matInput placeholder="Enter Custom Alert Name" formControlName="CustomAlertName">
+                    </mat-form-field>
+                    <p>Select well Name</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Well Name" formControlName="wellName">
+                            <mat-option *ngFor="let items of well" [value]="items.wellName">{{ items.wellName }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <p>Select Notification Type</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Notification" formControlName="NotificationType">
+                            <mat-option *ngFor="let items of notification"  [value]="items">{{ items }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <p>Select Priority</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Priority" formControlName="Priority">
+                            <mat-option *ngFor="let items of priority" [value]="items">{{ items }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <p>Select Category</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Category" formControlName="Category">
+                            <!-- ngValue="items.id" -->
+                            <mat-option *ngFor="let items of category" [value]="items">{{ items }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <p>Select Operator</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Operator" formControlName="Operator">
+                            <mat-option *ngFor="let items of operator" [value]="items">{{ items }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <p>Select Value</p>
+                    <mat-form-field appearance="outline">
+                        <mat-select placeholder="Select Value" formControlName="Value">
+                            <mat-option *ngFor="let items of value" [value]="items">{{ items }}
+                            </mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                    <hr>
+                    <button mat-button>Cancel</button>
+                    <button mat-button>Create</button>
+                </div>
+                <div class="col-md-6">
+                    <!-- <mat-card class="demo-inline-calendar-card">
+                        <mat-calendar [(selected)]="selected"></mat-calendar>
+                      </mat-card> -->
+                </div>
+            </div>
+        </form>
+        </div>
+        <div class="col-md-6">
+            <div class="righthead">
+                <h3>Custom Alert List</h3>
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="customAlertName">
+                        <th mat-header-cell *matHeaderCellDef> Custom Alert Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.customAlertName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="wellName">
+                        <th mat-header-cell *matHeaderCellDef> Well Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.wellName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-slide-toggle [checked]="element.isActive" (change)="toggle(element.id,$event)"></mat-slide-toggle>
+                                <button mat-icon-button class="button-type-none" (click)="editAlert(element.id)">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                           <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3.92109L12.0711 0L9.80391 2.26445L0 12.0492L0.00117184 16L3.90078 15.9984L12.9508 6.96523L12.9523 6.96602L16 3.92109ZM14.3156 3.92188L12.9539 5.28359L10.7078 3.0418L12.0711 1.68086L14.3156 3.92188ZM3.41016 14.8063L1.2332 12.4992L9.86484 3.88555L12.1086 6.125L3.41016 14.8063Z" fill="white" />
+                                    </svg>
+                                </button>
+                                <button mat-icon-button class="button-type-none" (click)="deleteAlert(element.id)">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                           <path fill-rule="evenodd" clip-rule="evenodd" d="M16 3.92109L12.0711 0L9.80391 2.26445L0 12.0492L0.00117184 16L3.90078 15.9984L12.9508 6.96523L12.9523 6.96602L16 3.92109ZM14.3156 3.92188L12.9539 5.28359L10.7078 3.0418L12.0711 1.68086L14.3156 3.92188ZM3.41016 14.8063L1.2332 12.4992L9.86484 3.88555L12.1086 6.125L3.41016 14.8063Z" fill="white" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      
+                </table>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>

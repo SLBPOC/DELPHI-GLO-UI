@@ -131,11 +131,11 @@
   <mat-sidenav #sidenav mode="side" class="example-sidenav open" [ngStyle]="{ 'width.em': sidenavWidth }" opened="true"
     id="navopen">
     <mat-nav-list>
-      <mat-list-item class="navcontenttxt" routerLink="#" routerLinkActive="active">
+      <mat-list-item class="navcontenttxt" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Dashboard</span>
       </mat-list-item>
       <mat-list-item (click)="showSubmenuWellList = !showSubmenuWellList" 
-      routerLink="#" class="parent navcontenttxt">
+      routerLink="well-list" routerLinkActive="active-list-item" class="parent navcontenttxt">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Well List</span>
 
         <!-- <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubmenu}"
@@ -147,13 +147,13 @@
         <a mat-list-item  routerLink="well-list/algorithms-and-mitigations">Algorithms and Mitigations</a>
       </div> -->
 
-      <mat-list-item class="navcontenttxt" routerLink="alerts">
+      <mat-list-item class="navcontenttxt" routerLink="alerts" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Alerts</span>
       </mat-list-item>
-      <mat-list-item class="navcontenttxt" routerLink="events">
+      <mat-list-item class="navcontenttxt" routerLink="events" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Events</span>
       </mat-list-item>
-      <mat-list-item (click)="showSubmenuReport = !showSubmenuReport" class="parent navcontenttxt">
+      <mat-list-item (click)="showSubmenuReport = !showSubmenuReport" class="parent navcontenttxt" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Reports</span>
         <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubmenuReport}"
           *ngIf="isExpanded || isShowing">arrow_drop_down</mat-icon>
@@ -162,10 +162,10 @@
         <a mat-list-item href="...">Submenu Item 1</a>
         <a mat-list-item href="...">Submenu Item 2</a>
       </div>
-      <mat-list-item class="navcontenttxt">
+      <mat-list-item class="navcontenttxt" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">Customer Admin</span>
       </mat-list-item>
-      <mat-list-item class="navcontenttxt">
+      <mat-list-item class="navcontenttxt" routerLinkActive="active-list-item">
         <span class="full-width menutxt" *ngIf="isExpanded || isShowing">SLB Admin</span>
       </mat-list-item>
     </mat-nav-list>

@@ -15,8 +15,18 @@ export class AlertListService {
   constructor(private http: HttpClient) { }
 
   getWellAlerts(): Observable<AlertList[]> {
-    //return this.http.get<AlertList[]>(alertsData);
-    return this.http.get<AlertList[]>(this._apiUrl + 'api/alerts/');
+    return this.http.get<AlertList[]>(alertsData);
+    // return this.http.get<AlertList[]>(this._apiUrl + 'api/alerts/');
+  }
+
+  getAlertDetailsWithFilters(searchModel:any, startDate?: Date, endDate?: Date): Observable<any> {
+    if(startDate && endDate){
+      return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/GetAlertsList?startDate=${startDate}&endDate=${endDate}`, searchModel); 
+      // http://localhost:50283/api/Alerts/GetAlertsList?startDate=2023-08-20&endDate=2023-08-24         
+    }
+    else {
+      return this.http.post<AlertList[]>(this._apiUrl + 'api/Alerts/GetAlertsList', searchModel);          
+    }
   }
 
 }

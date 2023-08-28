@@ -209,6 +209,14 @@
         display: block;
     }
 
+    .cleared-priorityline {
+        width: 4px;
+        height: 42px;
+        background-color: #A0A0A0;
+        border-radius: 8px;
+        display: block;
+    }
+
     .mat-mdc-paginator {
         background-color: rgba(19, 22, 41, 0.9);
         border-bottom-left-radius: 8px;

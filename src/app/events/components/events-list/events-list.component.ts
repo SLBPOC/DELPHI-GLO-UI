@@ -8,7 +8,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
   DateRange,
@@ -22,10 +22,12 @@ import { ThemePalette } from '@angular/material/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ViewEncapsulation } from '@angular/compiler';
-import{SLBSearchParams, SortOptions } from 'src/app/model/slb-params';
+import { SLBSearchParams, SortOptions } from 'src/app/model/slb-params';
 
 import { EventListService } from 'src/app/shared/services/event-list.service';
 import { EventList } from 'src/app/shared/models/event-list';
+import { debounceTime, distinctUntilChanged, fromEvent, map, tap } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
 
 interface Food {
   value: string;
@@ -59,21 +61,32 @@ enum DateRanges {
   styleUrls: ['./events-list.component.scss'],
 })
 export class EventsListComponent implements AfterViewInit {
-  wellList!: EventList[];
-  // date = new Date();
+  eventList!: EventList[];
+  totalCount: number = 0;
   daysSelected: any[] = [];
   event: any;
+  searchString: string = "";
+  model: any = {};
+  seachByStatus: string = "";
+  sortDirection: string = "";
+  sortColumn: string = "";
+  pageSize: number = 5;
+  pageNumber: number = 1;
+  pageIndex: number = 0;
+  skip = 0;
+  currentPage = 0;
   todayDate: Date = new Date();
   eventFormModel: EventFormModel = new EventFormModel();
   slbSearchParams: SLBSearchParams = new SLBSearchParams();
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
-    'stat',
-    'wellName',
-    'eventLevel',
-    'date',
-    'desc',
+    "Priority",
+    "WellName",
+    "EventType",
+    "EventDescription",
+    "CreationDateTime"
   ];
+
   eventTypes = ['High', 'Medium', 'Low'];
   statuses = ['Completed', 'In Progress'];
   range = new FormGroup({
@@ -81,69 +94,176 @@ export class EventsListComponent implements AfterViewInit {
     end: new FormControl(),
   });
   pipe!: DatePipe;
-
+  loading = true;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('searchQueryInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('matSelect')
+  matSelect!: MatSelect;
   @ViewChild(MatSort)
   sort!: MatSort;
+  @Input() selectedRangeValue!: DateRange<Date>;
   constructor(private service: EventListService) {
     this.dataSource = new MatTableDataSource<any>([]);
   }
+
   ngOnInit() {
-    let dte = new Date();
-    dte.setDate(dte.getDate() - 1);
-    console.log(dte.toString());
-    this.service.getWellEvents(this.slbSearchParams).subscribe((resp) => {
-      this.bindGridData(resp);
-      //this.dataSource.sort = this.sort;
-    });
-    this.callApi();
-  }
-  test() {
-    let aDate = new Date();
-    console.log(aDate.getDate() - 1);
-  }
-  bindGridData(res: EventList[]) {
-    this.wellList = res;
-    this.dataSource = new MatTableDataSource<EventList>(this.wellList);
-    //this.dataSource.paginator = this.paginator;
-  }
-  search(data: Event) {
-    const val = (data.target as HTMLInputElement).value;
-    this.dataSource.filter = val;
-  }
 
-  eventtChange(event: any) {
-    let filterValue;
-    filterValue = event.value.trim(); // Remove whitespace
-    filterValue = event.value.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
+    this.GetEventDetailsWithFilters();
   }
-
-  statusChange(event: any) {
-    let filterValue;
-    filterValue = event.value.trim(); // Remove whitespace
-    filterValue = event.value.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
-
-  selectDate(date: any) {
-    console.log('Selelcted date range --> ' + date.value);
-    let fromDate = date.value.start.toISOString();
-    let startDate = this.range.get('start')?.value;
-    let endDate = this.range.get('end')?.value;
-    let toDate = date.value.end.toISOString();
-    this.dataSource.filterPredicate = (data: any, filter: any) => {
-      if (fromDate && toDate) {
-        return data.date >= fromDate && data.date <= toDate;
-      }
-      return true;
-    };
-    this.dataSource.filter = '' + Math.random();
-  }
-
-  @Input() selectedRangeValue: DateRange<Date> | undefined;
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
-  // @ViewChild(MatSort) sort: MatSort;
+  ngAfterViewInit() {
+
+    // this.dataSource.paginator = this.paginator;
+    fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
+      map(event => event.target.value),
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(x => this.searchString = x)
+    ).subscribe(x => {
+      if (x != undefined && x.trim() != "") {
+        this.GetEventDetailsWithFilters();
+      }
+    });
+  }
+  GetEventDetailsWithFilters() {
+    this.loading = true;
+    var SearchModel = this.searchModel();
+    this.service.getEventDetailsWithFilters(SearchModel).subscribe(response => {
+      if (response.hasOwnProperty('data')) {
+        this.loading = false;
+        this.eventList = response.data;
+        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+        setTimeout(() => {
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = response.totalCount;
+        });
+
+        this.totalCount = response.totalCount;
+      }
+    });
+  }
+
+  GetEventListWithDateFilters(startDate: any, endDate: any, eventStatus: any, eventType: any) {
+    this.loading = true;
+    var SearchModel = this.searchModel();
+    this.service.getEventDetailsWithFilters(SearchModel, startDate, endDate, eventStatus, eventType).subscribe(response => {
+      if (response.hasOwnProperty('data')) {
+        this.loading = false;
+        this.eventList = response.data;
+        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+        setTimeout(() => {
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = response.totalCount;
+        });
+      }
+    });
+  }
+  searchModel(this: any) {
+    this.model.pageNumber = this.pageNumber;
+    this.model.pageSize = this.pageSize;
+    this.model.skip = this.skip;
+    this.model.searchString = this.searchString ? this.searchString : "";
+    this.model.field = this.sortColumn ? this.sortColumn : "";
+    this.model.dir = this.sortDirection ? this.sortDirection : "";
+    this.model.status = this.seachByStatus ? this.seachByStatus : "";
+    return this.model;
+  }
+
+
+  pageChanged(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.pageNumber = event.pageIndex + 1;
+    this.GetEventDetailsWithFilters();
+  }
+
+  onSortChanged(e: any) {
+    this.pageNumber = this.pageNumber;
+    this.pageSize = this.pageSize;
+    this.sortDirection = this.sort.direction;
+    this.sortColumn = (typeof this.sort.active !== "undefined") ? this.sort.active : "";
+    this.GetEventDetailsWithFilters();
+  }
+  clearSearch() {
+    this.pageNumber = 1;
+    this.seachByStatus = "";
+    this.searchString = "";
+    this.GetEventDetailsWithFilters();
+  }
+
+  refresh() {
+    this.pageNumber = 1;
+    this.seachByStatus = "";
+    this.searchString = "";
+    this.GetEventDetailsWithFilters();
+  }
+
+  setDateSelected(option: any) {
+    this.resetDateRangeFilters();
+    switch (option) {
+      case DateRanges.DAY:
+        let today = (new Date()).toISOString();
+        const filterValue = today.substring(0, 10);
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+        break;
+
+      case DateRanges.WEEK:
+        let curr = new Date(); // get current date
+        let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+        let last = first + 6; // last day is the first day + 6
+        let firstday = (new Date(curr.setDate(first))).toISOString();
+        let lastday = (new Date(curr.setDate(last))).toISOString();
+        this.dataSource.filterPredicate = (data: any) => {
+          if (firstday && lastday) {
+            return data.date >= firstday && data.date <= lastday;
+          }
+          return true;
+        }
+        this.dataSource.filter = '' + Math.random();
+        break;
+
+      case DateRanges.MONTH:
+        let date = new Date();
+        let firstDay = (new Date(date.getFullYear(), date.getMonth(), 1)).toISOString();
+        let lastDay = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).toISOString();
+        this.dataSource.filterPredicate = (data: any) => {
+          if (firstDay && lastDay) {
+            return data.date >= firstDay && data.date <= lastDay;
+          }
+          return true;
+        }
+        this.dataSource.filter = '' + Math.random();
+        break;
+    }
+
+  }
+
+  resetDateRangeFilters() {
+    // this.dataSource.filter = '';
+    this.refresh();
+    let todaysDate = new Date();
+    this.selectedRangeValue = new DateRange<Date>(todaysDate, null);
+    this.selectedRangeValueChange.emit(this.selectedRangeValue);
+  }
+
+  getSelectedMonth(month: any) {
+    let m = month + 1;
+    return m.toString().padStart(2, '0');
+  }
+
+  getSelectedDay(day: any) {
+    return day.toString().padStart(2, '0');
+  }
+
+  applyDateRangeFilter() {
+
+
+    let fromDate = this.selectedRangeValue.start;
+    let toDate = this.selectedRangeValue.end;
+    let startDate = fromDate?.getFullYear() + '-' + this.getSelectedMonth(fromDate?.getMonth()) + '-' + this.getSelectedDay(fromDate?.getDate());
+    let endDate = toDate?.getFullYear() + '-' + this.getSelectedMonth(toDate?.getMonth()) + '-' + this.getSelectedDay(toDate?.getDate());
+    this.GetEventListWithDateFilters(startDate, endDate, "", "");
+  }
 
   selectedChange(m: any) {
     if (!this.selectedRangeValue?.start || this.selectedRangeValue?.end) {
@@ -159,89 +279,28 @@ export class EventsListComponent implements AfterViewInit {
     }
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
-  onKeydownEventSearch(event: any) {
-    if (event?.key === 'Enter') {
-      this.callApi();
-    }
+  status: any;
+  getStatus(event: any) {
+    this.status = event.value;
   }
-  applyFilterSearch(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  type: any;
+  getType(event: any) {
+    this.type = event.value;
   }
-  applyFilter() {
-    this.callApi();
-  }
-  callApi(sort: SortOptions = new SortOptions()) {
-    //prepare input request
-    this.slbSearchParams.pageNumber = 1;
-    this.slbSearchParams.pageSize = 10;
-    this.slbSearchParams.sort = sort;
-    // this.slbSearchParams.searchTerm = this.eventFormModel.searchQueryInput;
-    if (!this.slbSearchParams.params)
-      this.slbSearchParams.params = new Map<string, string>();
-    if (this.eventFormModel.eventType) {
-      let eventTypeObj = this.EventType.find(
-        (x) => x.value == this.eventFormModel.eventType.toString()
-      );
-      this.slbSearchParams.params.set(
-        'eventType',
-        eventTypeObj?.viewValue ?? ''
-      );
-    }
-    // if (this.eventFormModel.status) {
-    //   let alertstatusObj = this.EventStatus.find(
-    //     (x) => x.value == this.eventFormModel.status.toString()
-    //   );
-    //   this.slbSearchParams.params.set(
-    //     'status',
-    //     alertstatusObj?.viewValue || ''
-    //   );
+  applyFilters(event: any) {
+
+    let status = this.status;
+    let type = this.type;
+    this.GetEventListWithDateFilters("", "", type,status);
+    // const filterValue = (event.target as HTMLInputElement).value;
+    // this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    // if (this.dataSource.paginator) {
+    //   this.dataSource.paginator.firstPage();
     // }
-    if (
-      this.eventFormModel.dateRange?.start &&
-      this.eventFormModel.dateRange?.end
-    ) {
-      this.slbSearchParams.params.set(
-        'dateRange',
-        this.eventFormModel.dateRange.start.toString() +
-          '$' +
-          this.eventFormModel.dateRange.end.toString()
-      );
-    }
-    this.service.getWellEvents(this.slbSearchParams).subscribe((resp) => {
-      this.bindGridData(resp);
-    });
   }
-  applyFilterTest(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.sort.sortChange.subscribe((x: SortOptions) => {
-      this.callApi(x);
-    });
-  }
-
-  applyFilters(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  clearAll() {
-    this.slbSearchParams.searchTerm = null!;
-    this.slbSearchParams.params = new Map<string, string>();
-    this.service.getWellEvents(this.slbSearchParams).subscribe((resp) => {
-      this.bindGridData(resp);
-    });
+  changeClient(value: any) {
+    console.log(value);
   }
   EventType: Food[] = [
     { value: '1', viewValue: 'High' },
@@ -252,88 +311,11 @@ export class EventsListComponent implements AfterViewInit {
     { value: '1', viewValue: 'Completed' },
     { value: '2', viewValue: 'In Progress' },
   ];
-  setSelectedDateRange(range: DateRanges) {
-    this.resetCalender(false);
-
-    switch (range) {
-      case DateRanges.DAY:
-        let today = new Date();
-        let previous = new Date();
-        previous.setDate(previous.getDate() - 1);
-        this.eventFormModel.dateRange.start = previous;
-        this.eventFormModel.dateRange.end = today;
-        let dates = this.getDates(previous, today);
-        dates.forEach((element) => {
-          this.select(element, this.calendarChild);
-        });
-
-        break;
-      case DateRanges.WEEK:
-        var curr = new Date(); // get current date
-        var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-        var last = first + 6; // last day is the first day + 6
-        var firstday = new Date(curr.setDate(first));
-        var lastday = new Date(curr.setDate(last));
-        this.eventFormModel.dateRange.start = firstday;
-        this.eventFormModel.dateRange.end = lastday;
-        let datesWeek = this.getDates(firstday, lastday);
-        datesWeek.forEach((element) => {
-          this.select(element, this.calendarChild);
-        });
-        break;
-      case DateRanges.MONTH:
-        var date = new Date();
-        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        this.eventFormModel.dateRange.start = firstDay;
-        this.eventFormModel.dateRange.end = lastDay;
-        let datesM = this.getDates(firstDay, lastDay);
-        datesM.forEach((element) => {
-          this.select(element, this.calendarChild);
-        });
-        break;
-    }
-  }
-  @ViewChild('picker') datePicker!: MatDatepicker<Date>;
-  openCalender() {
-    this.datePicker.open();
-  }
-
-  getPreviousDay(dateRange: DateRanges): Date {
-    let previous = new Date();
-    switch (dateRange) {
-      case DateRanges.DAY:
-        break;
-      case DateRanges.WEEK:
-        break;
-      case DateRanges.MONTH:
-        break;
-    }
-    return previous;
-  }
-  isSelected = (event: any) => {
-    const date =
-      event.getFullYear() +
-      '-' +
-      ('00' + (event.getMonth() + 1)).slice(-2) +
-      '-' +
-      ('00' + event.getDate()).slice(-2);
-    return this.daysSelected.find((x) => x == date) ? ['selected'] : '';
-  };
-
-  @ViewChild('calendar') calendarChild!: MatCalendar<any>;
-  resetCalender(initApiCall: boolean = true) {
-    this.daysSelected = [];
-    this.calendarChild.updateTodaysDate();
-    this.eventFormModel.dateRange = new DateRangeProps();
-    this.clearParams(['dateRange']);
-    if (initApiCall) this.callApi();
-  }
   clearFilter() {
     this.eventFormModel.eventType = 0;
     this.eventFormModel.status = 0;
     this.clearParams(['eventType', 'status']);
-    this.callApi();
+    this.GetEventDetailsWithFilters();
   }
   clearParams(paramName: string[]) {
     if (
@@ -345,26 +327,5 @@ export class EventsListComponent implements AfterViewInit {
       paramName.forEach((x) => this.slbSearchParams.params.delete(x));
     }
   }
-  getDates(startDate: Date, stopDate: Date) {
-    var dateArray = new Array();
-    var currentDate = new Date(startDate);
-    while (currentDate <= stopDate) {
-      dateArray.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return dateArray;
-  }
-  select(event: any, calendar: any) {
-    const date =
-      event.getFullYear() +
-      '-' +
-      ('00' + (event.getMonth() + 1)).slice(-2) +
-      '-' +
-      ('00' + event.getDate()).slice(-2);
-    const index = this.daysSelected.findIndex((x) => x == date);
-    if (index < 0) this.daysSelected.push(date);
-    else this.daysSelected.splice(index, 1);
 
-    calendar.updateTodaysDate();
-  }
 }

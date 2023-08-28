@@ -1,11 +1,11 @@
 export interface AlertList {
-    wellName: string;
-    alertLevel: string;
-    timeandDate: Date;
-    alertDescription: string;
-    alertType: string;
-    alertStatus: string;
-    userId: string;
-    id: number
+    WellName: string;
+    AlertLevel: string;
+    TimeandDate: Date;
+    AlertDescription: string;
+    AlertType: string;
+    AlertStatus: string;
+    UserId: string;
+    Id: number
     action: string;
 }

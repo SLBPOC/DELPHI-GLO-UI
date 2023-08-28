@@ -138,6 +138,9 @@
    }
 }
 
+.snooze-active {
+    background-color: #6BA7FF !important;
+}
 
 .select-filter {
     width: 400px;
@@ -251,4 +254,10 @@
             color: #080912;
         }
     }
+}
+
+.no-records {
+    color: white;
+    display: flex;
+    justify-content: end;
 }
