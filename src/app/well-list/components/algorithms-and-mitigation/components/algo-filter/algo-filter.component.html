@@ -1,0 +1,69 @@
+<div class="container bg-dark-blue m-0 w-100 p-4">
+  <h4>Filters</h4>
+<ng-container [formGroup]="filterGroup">
+
+  <h4>Mitigations</h4> <hr>
+
+  <div class="container-fluid">
+    <label for="flatlining"> Flatlining</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('flatlining')?.value" [disabled]="false"
+      formControlName="flatlining">
+    </mat-slide-toggle>
+  </div>
+
+  <div class="container-fluid">
+    <label for="tagging"> Tagging</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('tagging')?.value" [disabled]="false"
+      formControlName="tagging">
+    </mat-slide-toggle>
+  </div>
+
+  <div class="container-fluid">
+    <label for="fluidPound"> Fluid Pound</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('fluidPound')?.value" [disabled]="false"
+      formControlName="fluidPound">
+    </mat-slide-toggle>
+  </div>
+  <div class="container-fluid">
+    <label for="gasInterference"> Gas Interference</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('gasInterference')?.value" [disabled]="false"
+      formControlName="gasInterference">
+    </mat-slide-toggle>
+  </div>
+
+  <h4>Algorithms</h4> <hr>
+  <div class="container-fluid">
+    <label for="productionOptimizerPi"> Production Optimizer PI</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('productionOptimizerPi')?.value" [disabled]="false"
+      formControlName="productionOptimizerPi">
+    </mat-slide-toggle>
+  </div>
+  <div class="container-fluid">
+    <label for="productionOptimizerCi"> Production Optimizer CI</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('productionOptimizerCi')?.value" [disabled]="false"
+      formControlName="productionOptimizerCi">
+    </mat-slide-toggle>
+  </div>
+
+  <h4>POC Settings</h4> <hr>
+
+  <div class="container-fluid">
+    <label for="primaryFillage"> Primary Fillage</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('primaryFillage')?.value" [disabled]="false"
+      formControlName="primaryFillage">
+    </mat-slide-toggle>
+  </div>
+  <div class="container-fluid">
+    <label for="secondaryPumpFillage"> Secondary Pump Fillage</label> <br>
+    <mat-slide-toggle class="tp-margin" [checked]="filterGroup.get('secondaryPumpFillage')?.value" [disabled]="false"
+      formControlName="secondaryPumpFillage">
+    </mat-slide-toggle>
+  </div>
+
+</ng-container>
+
+<div class="d-flex justify-content-left mt-2">
+  <button class="btn btn-default border mr-2" (click)="setAlgoMitFilterData()">Apply to this graph</button> 
+  <button class="btn btn-default border" (click)="setAlgoMitFilterData()">Apply to all graphs</button>
+</div>
+</div>

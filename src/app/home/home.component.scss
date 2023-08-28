@@ -1,0 +1,54 @@
+.dls-sample-table {
+  width: 100%;
+
+  .caption-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 0;
+
+    .title {
+      padding: 8px 0;
+      flex-grow: 1;
+      vertical-align: middle;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+
+    .dls-search {
+      position: relative;
+      .dls-search-field {
+        min-width: 130px;
+      }
+    }
+  }
+
+  .user-image {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.dls-paginator {
+  min-width: 370px;
+  margin-left: auto;
+}
+
+.mat-mdc-table .mdc-data-table__header-row,
+.mat-mdc-table .mdc-data-table__row {
+  height: 40px !important;
+}
+
+.mat-mdc-table .mdc-data-table__header-row {
+  background-color: #f2f2f2 !important;
+}
+
+.mat-mdc-table caption {
+  padding: 0 20px !important;
+}

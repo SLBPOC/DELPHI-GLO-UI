@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "type": "Pump Tagging",
+    "value": "70",
+    "symbol": "circle",
+    "symbolClass": "fa fa-circle",
+    "symbolColor": "rgba(128,135,232,0.5)"
+  },
+  {
+    "id": 2,
+    "type": "Flatlining",
+    "value": "520",
+    "symbol": "square",
+    "symbolClass": "fa fa-square",
+    "symbolColor": "rgba(163,237,186,0.5)"
+  },
+  {
+    "id": 3,
+    "type": "Gas Interference",
+    "value": "50",
+    "symbol": "triangle",
+    "symbolClass": "fa-solid fa-triangle",
+    "symbolColor": "orange"
+  },
+  {
+    "id": 4,
+    "type": "Fluid Pound",
+    "value": "80",
+    "symbol": "diamond",
+    "symbolClass": "fa-solid fa-rhombus",
+    "symbolColor": "darkgreen"
+  },
+  {
+    "id": 5,
+    "type": "Distorted",
+    "value": "30",
+    "symbol": "circle",
+    "symbolClass": "fa fa-circle",
+    "symbolColor": "rgba(225,211,105,0.5)"
+  },
+  {
+    "id": 6,
+    "type": "Normal",
+    "value": "50",
+    "symbol": "rectangle",
+    "symbolClass": "fa fa-caret-down",
+    "symbolColor": "skyblue"
+  }
+ 
+]

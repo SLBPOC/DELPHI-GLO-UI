@@ -1,0 +1,93 @@
+<app-navigation>Algorithms & mitigations & Mitigations KPI</app-navigation>
+<div class="container-fluid">
+
+    <div class="row border m-2 p-3">
+        <div class="col-md-4">
+            <h5>Controllers</h5>
+            <mat-form-field>
+                <mat-select>
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let state of controllerSelectOptions" [value]="state">{{state}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-4">
+            <h5>Tag(Total: {{tagsTotal}}/Selected: {{tagsSelected || 0}})</h5>
+            <mat-form-field class="w-100">
+                <mat-select [formControl]="tagControl" multiple (selectionChange)="onTagSelectionChanged($event)">
+                  <mat-select-trigger>
+                    {{tagControl.value?.[0] || ''}}
+                    <span *ngIf="(tagControl?.value?.length || 0) > 1" class="example-additional-selection">
+                      (+{{(tagControl.value?.length || 0) - 1}} {{tagControl.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let topping of tagSelectOptions" [value]="topping">{{topping}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+            <button class="ml-5 mt-2" mat-raised-button color="primary" (click)="applyTags()">Apply</button>
+        </div>
+    </div>
+
+    <div class="row p-2">
+
+        <mat-accordion >
+            <mat-expansion-panel class="bg-transparent" (opened)="panelOpenState = true"
+                                 (closed)="panelOpenState = false" [expanded]="true">
+              <mat-expansion-panel-header class="border-bottom">
+                <mat-panel-title>
+                  <h4>Tags</h4>
+                </mat-panel-title>
+                <mat-panel-description class="justify-content-end">
+                  <!-- Currently I am {{panelOpenState ? 'open' : 'closed'}} -->
+                  <span class="material-icons" (click)="networkTags()">wifi</span>
+                  <span class='material-icons' (click)="refreshTags()">restart_alt</span>
+                  <span class='material-icons' style="color: darkred;" (click)="syncTags()">sync_disabled</span>
+                   <button class="ml-5" mat-raised-button color="primary" (click)="saveTags()">Save</button>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              
+              <div class="row mt-3">
+                <div class="col-md-3" *ngFor="let tagData of tagsDetailsData">
+                    <mat-card class="bg-transparent">
+                        <mat-card-content class="p-2">
+                            <h5>{{tagData.tagTitle}}</h5>
+                           </mat-card-content>
+                       <mat-card-content class="p-2">
+                        <h3>{{tagData.tagContent}}</h3>
+                       </mat-card-content>
+                       <mat-card-content class="p-2">
+                        <h5>{{tagData.tagInfo}}</h5>
+                       </mat-card-content>
+                      </mat-card>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+
+          
+        
+    </div>
+
+    <div class="row border m-2">
+        <div class="col-md-12 p-0">
+            
+        <div>
+            <!-- top bar -->
+        </div>
+            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+                <mat-tab label="RAW HISTORY">
+                    <h4 class="text-gray m-4 text-secondary">History Visualization</h4>
+                    <app-algo-line-chart></app-algo-line-chart>
+                </mat-tab>
+                <mat-tab label="DECIMATRED">Content 2</mat-tab>
+              </mat-tab-group>
+        </div>
+
+    </div>
+
+</div>
+
+<app-algo-filter></app-algo-filter>

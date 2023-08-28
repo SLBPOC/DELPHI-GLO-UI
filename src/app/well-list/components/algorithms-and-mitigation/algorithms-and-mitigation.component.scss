@@ -1,0 +1,16 @@
+::ng-deep {
+  .mdc-text-field--filled {
+      height: 36px !important;
+      align-items: center !important;
+  }
+  .mat-expansion-panel {
+      box-shadow: none !important;
+      border: 1px solid #ededed !important;
+  }
+  .mat-mdc-card-content {
+      border: 1px solid #ededed !important;
+  }
+  .mat-mdc-tab-list {
+      border: 1px solid #ededed !important;
+  }
+}

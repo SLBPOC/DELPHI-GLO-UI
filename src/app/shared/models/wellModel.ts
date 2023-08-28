@@ -1,0 +1,31 @@
+export interface WellModel {
+     id:number;
+     wellName:string;
+     wellStatus:string;
+     location:string;
+     spm:number;
+     pumpFillage:number;
+     wellState:string;
+     pumpCardDiagnostics:string;
+     motorCurrent:number;
+     pumpDisplacement:number;
+     currentCardArea:number;
+     commStatus:string;
+     controllerStatus:string;
+     performanceStatus:string;
+     inferredProduction:number;
+     effectiveRuntime:number;
+     cycleToday:number;
+     structuralLoad:number;
+     minMaxLoad:number;
+     gearboxLoad:number;
+     rodStress:number;
+     yesterdayCycle:number;
+     battery:string;
+     pad:string;
+     field:string;
+     createdBy:number;
+     updatedBy:number;
+     noOfAlerts:number;
+     dateAndTime:any;
+}
