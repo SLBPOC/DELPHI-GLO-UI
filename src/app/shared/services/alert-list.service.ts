@@ -29,4 +29,12 @@ export class AlertListService {
     }
   }
 
+  getSnoozedAlerts(alertId: number, snoozeBy: string, searchModel?: any): Observable<any> {
+    return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/GetSnoozeByAlert?alertId=${alertId}&snoozeBy=${snoozeBy}`, searchModel);
+  }
+
+  clearAlerts(alertId: number, comment: string, searchModel?: any): Observable<any> {
+    return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/ClearAlert?alertId=${alertId}&comment=${comment}`, searchModel);
+  }
+
 }

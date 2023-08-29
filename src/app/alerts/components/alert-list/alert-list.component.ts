@@ -29,25 +29,13 @@ enum DateRanges {
 
 export class AlertListComponent {
   alertList!: AlertList[];
-  snoozedAlerts: any = [];
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
   displayedColumns: string[] = ["stat", "WellName", "TimeandDate", "AlertDescription", "action"]
-  alertTypes: Option[] = [
-    { id: '1', value: 'High' },
-    { id: '2', value: 'Medium' },
-    { id: '3', value: 'Low' }
-  ];
-  statuses: Option[] = [
-    { id: '1', value: 'Completed' },
-    { id: '2', value: 'In Progress' }
-  ];
   highCount = 0;
   medCount = 0;
   lowCount = 0;
   clearCount = 0;
-  selectedStatus: any;
-  selectedAlert: any;
   searchQueryInput: any;
   clearAlertsComments!: string;
   searchString: string = "";
@@ -64,10 +52,6 @@ export class AlertListComponent {
   snoozeByTime: string = '1h';
   showSnoozeDialog: boolean = false;
   totalCount: number = 0;
-  OverPumping: number = 0;
-  OptimalPumping: number = 0;
-  UnderPumping: number = 0;
-  noRecordFlag = false;
 
   defaultFilterPredicate?: (data: any, filter: string) => boolean;
 
@@ -111,19 +95,16 @@ export class AlertListComponent {
         this.alertList = response.data;
         // this.alertList.forEach(x => this.prepareChart(x));
         this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-        if(this.dataSource.data.length == 0){
-          this.noRecordFlag = true
-        }
-        else {
-          this.noRecordFlag = false
-        }
         this.getLegendCount();
+        this.moveClearAlertsToBottom();
         setTimeout(() => {
           this.paginator.pageIndex = this.currentPage;
           this.paginator.length = response.totalCount;
         });
 
         this.totalCount = response.totalCount;
+        this.paginator.pageIndex = this.currentPage;
+        this.paginator.length = response.totalCount;
       }
     });
   }
@@ -136,14 +117,10 @@ export class AlertListComponent {
         this.loading = false;
         this.alertList = response.data;
         this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-        if(this.dataSource.data.length == 0){
-          this.noRecordFlag = true
-        }
-        else {
-          this.noRecordFlag = false
-        }
         this.getLegendCount();
+        this.moveClearAlertsToBottom();
         setTimeout(() => {
+          this.totalCount = response.totalCount;
           this.paginator.pageIndex = this.currentPage;
           this.paginator.length = response.totalCount;
         });
@@ -197,82 +174,44 @@ export class AlertListComponent {
   }
 
   refresh() {
-    this.pageNumber = 1;
+    this.pageNumber = this.pageNumber;
     this.seachByStatus = "";
     this.searchString = "";
     this.GetAlertDetailsWithFilters();
-    this.checkSnoozedAlerts();
+    // this.checkSnoozedAlerts();
   }
 
-  checkSnoozedAlerts(){
-    let snoozedData = (localStorage.getItem("Snoozed Alerts"));
-    console.log(snoozedData);
-    // let tempSnoozeAlert = this.alertList.splice(snoozedData[0]?.Id, 1);
-  }
-
-  snoozeBy(snoozeTime: any, index: number) {
-    // const payload = {
-    //   alertId: snoozeTime.Id,
-    //   snoozeBy: this.snoozeByTime
-    // }
-    // console.log('snoozyBy payload', payload + "index--> " + index)
-    let tempSnoozeAlert = this.alertList.splice(index, 1);
-    let obj = {
-      WellName: tempSnoozeAlert[0].WellName,
-      AlertLevel: tempSnoozeAlert[0].AlertLevel,
-      TimeandDate: tempSnoozeAlert[0].TimeandDate,
-      AlertDescription: tempSnoozeAlert[0].AlertDescription,
-      AlertType: tempSnoozeAlert[0].AlertType,
-      AlertStatus: tempSnoozeAlert[0].AlertStatus,
-      UserId: tempSnoozeAlert[0].UserId,
-      Id: tempSnoozeAlert[0].Id,
-      currentTime: new Date(),
-      SnoozeTime: this.snoozeByTime
-    }
-    this.snoozedAlerts.push(obj);
-    console.log('snoozedAlerts', JSON.stringify(this.snoozedAlerts))
-    this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-    if(this.dataSource.data.length == 0){
-      this.noRecordFlag = true
-    }
-    else {
-      this.noRecordFlag = false
-    }
-    localStorage.setItem("Snoozed Alerts", JSON.stringify(this.snoozedAlerts));
-    let data = (localStorage.getItem("Snoozed Alerts"));
-    console.log(data);
-    // console.log("clearAlertsWllName-->"+wellId.id)
-    // wellId.alertLevel = "Clear"
-    // console.log("clearAlerts-->"+this.dataSource)
-    // this.clearAlertsComments = "";
-    // debugger
-    // **** Need to add service
-    // this.service.snoozeBy(payload).subscribe((data: any) => {
-    //   console.log('snooze by response', data);
-    // })
+  snoozeBy(snoozeTime: any, snoozeByTime: any) {
+    this.service.getSnoozedAlerts(snoozeTime.Id, snoozeByTime).subscribe((data: any) => {
+      console.log('snooze by response', data);
+      this.GetAlertDetailsWithFilters();
+    })
   }
 
   closeSnoozeDialog(snoozeDialog: any) {
     snoozeDialog.close.emit();
   }
 
-  clearAlerts(alert: any, comment: string) {
-    console.log('clear alert', alert)
-    const payload = {
-      alertId: alert.alertId,
-      comment: comment
-    }
-    console.log('clear alert', payload)
-    // ** Need to add service
-    // this.service.clearAlert(payload).subscribe((data: any) => {
-    //   console.log('clear alert response', data);
-    // })
+  moveClearAlertsToBottom(){
+    let clearedList: AlertList[];
+    clearedList = this.alertList.filter((alert) => alert.AlertLevel === 'Cleared')
+    this.alertList = this.alertList.filter((alert) => alert.AlertLevel !== 'Cleared')
+    clearedList.forEach((item) => {
+      this.alertList.push(item)
+    })
+    this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+  }
 
-    // console.log("clearAlertsWllName-->"+wellId.id)
-    // wellId.alertLevel = "Clear"
-    // console.log("clearAlerts-->"+this.dataSource)
-    // this.clearAlertsComments = "";
-    // debugger
+  clearAlerts(alert: any, comment: string) {
+    this.loading = true;
+    this.service.clearAlerts(alert.Id, comment).subscribe((data: any) => {
+      this.clearAlertsComments = "";
+      if (data == true) {
+        this.GetAlertDetailsWithFilters();
+        // this.moveClearAlertsToBottom();
+        this.loading = false;
+      }
+    })
   }
 
   closeClearAlertDialog(alertDialog: any) {
@@ -296,18 +235,30 @@ export class AlertListComponent {
   }
 
   legendFilter(priority: any) {
-    this.dataSource.filter = priority;
-    if(this.dataSource.filteredData.length == 0){
-      this.noRecordFlag = true
-    }
-    else {
-      this.noRecordFlag = false
+    let priorityList: AlertList[];
+    switch (priority) {
+      case 'High':
+        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'High')
+        this.dataSource = new MatTableDataSource<AlertList>(priorityList);
+        break;
+      case 'Medium':
+        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Medium')
+        this.dataSource = new MatTableDataSource<AlertList>(priorityList);
+        break;
+      case 'Low':
+        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Low')
+        this.dataSource = new MatTableDataSource<AlertList>(priorityList);
+        break;
+      case 'Cleared':
+        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Cleared')
+        this.dataSource = new MatTableDataSource<AlertList>(priorityList);
+        break;
     }
   }
 
   resetDateFilters() {
     // this.dataSource.filter = '';
-    this.pageNumber = 1;
+    this.pageNumber = this.pageNumber;
     this.seachByStatus = "";
     this.searchString = "";
     let todaysDate = new Date();
