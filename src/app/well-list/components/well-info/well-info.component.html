@@ -1,26 +1,36 @@
 <!-- <app-navigation>Well info</app-navigation>
 <button mat-button color="primary">Primary</button> -->
 <div class="main-container">
-   <div class="container-title d-flex justify-content-between">
-      <span>
-         <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-               d="M7.89746 12.919L2.86035 7.76407H19.9995V6.23543H2.86035L7.90039 1.08203L6.84131 0L0 7.00075L6.84082 14L7.89746 12.919Z"
-               fill="#EBECF2" />
-         </svg>
-         <h1>Well Info</h1>
-      </span>
-      <button mat-button color="primary" (click)="createCustomFeed()">Feed</button>
-   </div>
-   <div class="d-flex mx-2 mt-4">
-      <div class="row">
-         <div class="col-md-3 mt-4" *ngFor="let summary of dynacardSummaryData">
-            <mat-card>
-               <p>{{ summary.label }}</p>
-               <span>{{ summary.value }}</span>
-            </mat-card>
-         </div>
+  <div class="container-title d-flex justify-content-between">
+    <span>
+      <svg
+        width="20"
+        height="14"
+        viewBox="0 0 20 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M7.89746 12.919L2.86035 7.76407H19.9995V6.23543H2.86035L7.90039 1.08203L6.84131 0L0 7.00075L6.84082 14L7.89746 12.919Z"
+          fill="#EBECF2"
+        />
+      </svg>
+      <h1>Well Info</h1>
+    </span>
+    <button mat-button color="primary" (click)="createCustomFeed()">
+      Feed
+    </button>
+  </div>
+  <div class="d-flex mx-2 mt-4">
+    <div class="row">
+      <div class="col-md-3 mt-4" *ngFor="let summary of dynacardSummaryData">
+        <mat-card>
+          <p>{{ summary.label }}</p>
+          <span>{{ summary.value }}</span>
+        </mat-card>
       </div>
-   </div>
-   <app-create-custom-feed [isEnable] ="enabled"></app-create-custom-feed>
+    </div>
+  </div>
 </div>

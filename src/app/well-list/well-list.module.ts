@@ -8,20 +8,17 @@ import { AlgorithmsAndMitigationComponent } from './components/algorithms-and-mi
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AlgoFilterComponent } from './components/algorithms-and-mitigation/components/algo-filter/algo-filter.component';
 import { AlgoLineChartComponent } from './components/algorithms-and-mitigation/components/algo-line-chart/algo-line-chart.component';
-
+import { WellInfoComponent } from './components/well-info/well-info.component';
 
 @NgModule({
   declarations: [
     WellListComponent,
     AlgorithmsAndMitigationComponent,
+    WellInfoComponent,
     NavigationComponent,
     AlgoFilterComponent,
-    AlgoLineChartComponent
+    AlgoLineChartComponent,
   ],
-  imports: [
-    CommonModule,
-    WellListRoutingModule,
-    SharedModule
-  ]
+  imports: [CommonModule, WellListRoutingModule, SharedModule],
 })
-export class WellListModule { }
+export class WellListModule {}
