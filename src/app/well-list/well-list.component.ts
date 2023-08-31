@@ -1,18 +1,20 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { DateRange } from '@angular/material/datepicker';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { WellListModel } from '../../app/shared/models/well-list';
 import { WellListService } from '../../app/shared/services/well-list.service';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, fromEvent, map, tap } from 'rxjs';
 
 interface Option {
   id: string;
@@ -30,30 +32,105 @@ enum DateRanges {
   templateUrl: './well-list.component.html',
   styleUrls: ['./well-list.component.scss'],
 })
-
 export class WellListComponent {
-  displayedColumns: string[] = ['status', 'well_name', 'time_stamp', 'GLI_SetPoint', 'Oliq', 'QOil', 'WC', 'Compressor_Uptime', 'Production_Uptime', 'Current_GLI_Setpoint', 'Cycle_Status', 'Auto_Manual', 'well_status'];
-  wellList! : WellListModel[];
+  displayedColumns: string[] = [
+    'PumpStatus',
+    'WellName',
+    'TimeStamp',
+    'GLISetPoint',
+    'OLiq',
+    'QOil',
+    'Wc',
+    'CompressorUpTime',
+    'ProductionUpTime',
+    'CurrentGLISetpoint',
+    'CycleStatus',
+    'ApprovalStatus',
+    'ApprovalMode',
+    'NoOfAlerts',
+  ];
+  approvalModeList: Option[] = [
+    { id: '0', value: 'Manual' },
+    { id: '1', value: 'Auto' },
+  ];
+  prodUptime: Option[] = [
+    { id: '0', value: 'Over Pumping' },
+    { id: '1', value: 'Optimum Pumping' },
+    { id: '2', value: 'Under Pumping' },
+  ];
+  wellList!: WellListModel[];
+  extraColumnsCtrl: any = new FormControl('');
+  extraColumnsList: { label: string; accessor: string; header: string }[] = [
+    {
+      label: 'GLISetPoint',
+      accessor: 'GLISetPoint',
+      header: 'GLISetPoint',
+    },
+    {
+      label: 'CompressorUpTime',
+      accessor: 'CompressorUpTime',
+      header: 'CompressorUpTime',
+    },
+    {
+      label: 'Production_Uptime',
+      accessor: 'Production_Uptime',
+      header: 'Production_Uptime',
+    },
+    { label: 'CycleStatus', accessor: 'CycleStatus', header: 'CycleStatus' },
+    {
+      label: 'CurrentGLISetpoint',
+      accessor: 'CurrentGLISetpoint',
+      header: 'CurrentGLISetpoint',
+    },
+    { label: 'ApprovalMode', accessor: 'ApprovalMode', header: 'ApprovalMode' },
+  ];
+
+  @ViewChild('searchQueryInput')
+  searchInput!: ElementRef<HTMLInputElement>;
+
   dataSource = new MatTableDataSource<WellListModel>(this.wellList);
   highCount = 0;
   medCount = 0;
   lowCount = 0;
   searchQueryInput: any;
-  approvalMode: Option[] = [
-    { id: '0', value: 'Manual' },
-    { id: '1', value: 'Auto' }
-  ]
-  prodUptime: Option[] = [
-    { id: '0', value: 'No' },
-    { id: '1', value: 'Yes' }
-  ]
+  selectedColumn: string[] = [];
 
   @Input() selectedRangeValue!: DateRange<Date>;
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  wellListId!:number;
-  constructor(private _formBuilder: FormBuilder, private service: WellListService, private router: Router) { }
+  wellListId!: number;
+  searchString: string = '';
+  sortDirection: string = '';
+  sortColumn: string = '';
+  pageSize: number = 5;
+  pageNumber = 1;
+  currentPage = 0;
+  totalCount = 0;
+  TotalCount: number = 0;
+  OverPumping: number = 0;
+  OptimumPumping: number = 0;
+  UnderPumping: number = 0;
+  loading = true;
+  model: any = {};
+  displayableExtraColumns: {
+    label: string;
+    accessor: string;
+    header: string;
+  }[] = [];
+
+  // searchInput: any;
+  searchText: any;
+  seachByStatus!: string;
+  status = this.seachByStatus;
+  CycleStatus: string = '';
+  ApprovalMode: string = '';
+  PumpStatus: string = '';
+  constructor(
+    private _formBuilder: FormBuilder,
+    private service: WellListService,
+    private router: Router
+  ) {}
   toppings = this._formBuilder.group({
     EffectiveRunTime: false,
     CyclesToday: false,
@@ -67,49 +144,138 @@ export class WellListComponent {
     this.setGridData();
   }
 
-  getData(id : any){
-    this.router.navigate(['/glo/feature/wellInfo',id]);
-//console.log(id);
+  getData(id: any) {
+    this.router.navigate(['/glo/feature/wellInfo', id]);
+    //console.log(id);
   }
 
-  setGridData(){
+  setGridData() {
+    this.loading = true;
+    var SearchModel = this.createModel();
+    this.service
+      .getWellDetailsWithFilters(SearchModel)
+      .subscribe((response) => {
+        if (response.hasOwnProperty('data')) {
+          this.loading = false;
+          this.wellList = response.data;
+          // this.wellList.forEach(x => this.prepareChart(x));
+          this.dataSource = new MatTableDataSource<WellListModel>(
+            this.wellList
+          );
+          setTimeout(() => {
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = response.totalCount;
+          });
+
+          this.TotalCount = response.totalCount;
+          this.OverPumping = response.totalOverpumping;
+          this.OptimumPumping = response.totalOptimalPumping;
+          this.UnderPumping = response.totalUnderpumping;
+        }
+      });
+  }
+
+  //Create Model for search
+
+  createModel(this: any) {
+    console.log(this.pageSize + this.model);
+    this.model.pageSize = this.pageSize;
+    this.model.pageNumber = this.pageNumber;
+    this.model.searchString = this.searchString ? this.searchString : '';
+    this.model.skip = this.skip ? this.skip : 0;
+    this.model.dir = this.sortDirection ? this.sortDirection : '';
+    this.model.status = this.status ? this.status : '';
+    this.model.field = this.sortColumn ? this.sortColumn : '';
+    this.model.sortColumn = this.sortColumn ? this.sortColumn : '';
+    this.model.PumpStatus = this.PumpStatus ? this.PumpStatus : '';
+    this.model.ApprovalMode = this.ApprovalMode ? this.ApprovalMode : '';
+
+    return this.model;
+    debugger;
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    fromEvent<any>(this.searchInput.nativeElement, 'keyup')
+      .pipe(
+        map((event) => event.target.value),
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap((x) => (this.searchText = x))
+      )
+      .subscribe((x) => {
+        if (x != undefined && x.trim() != '') {
+          this.setGridData();
+        }
+      });
+  }
+  pageChanged(event: PageEvent) {
+    console.log({ event });
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.pageNumber = event.pageIndex + 1;
+    this.setGridData();
+  }
+  SeachByStatus(status: string) {
+    this.status = status;
+    this.pageNumber = 1;
+    this.setGridData();
+  }
+  ApplyByFilter(value: string) {
+    this.ApprovalMode = value;
+    this.pageNumber = 1;
+    this.setGridData();
+  }
+  ApplyProductionFilter(value: string) {
+    this.PumpStatus = value;
+    this.pageNumber = 1;
+    this.setGridData();
+  }
+  getLegendCount() {
     this.service.getWellDetails().subscribe((resp) => {
       this.wellList = resp;
-      this.dataSource = new MatTableDataSource<WellListModel>(this.wellList);
-      this.getLegendCount();
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    })
-  }
+      let high = this.wellList.filter(
+        (alert) => alert.pumpStatus == 'Over Pumping'
+      );
+      this.highCount = high.length;
 
-  getLegendCount(){
-    let high = this.wellList.filter(alert => alert.status == "high");
-    this.highCount = high.length;
+      let med = this.wellList.filter(
+        (alert) => alert.pumpStatus == 'Optimum Pumping'
+      );
+      this.medCount = med.length;
 
-    let med = this.wellList.filter(alert => alert.status == "med");
-    this.medCount = med.length;
-
-    let low = this.wellList.filter(alert => alert.status == "low");
-    this.lowCount = low.length;
+      let low = this.wellList.filter(
+        (alert) => alert.pumpStatus == 'Under Pumping'
+      );
+      this.lowCount = low.length;
+    });
   }
 
   search(data: Event) {
     const val = (data.target as HTMLInputElement).value;
     this.dataSource.filter = val;
   }
+  ClearSearch() {
+    this.pageNumber = 1;
+    this.status = '';
+    this.searchText = '';
+    this.setGridData();
+  }
 
-  refresh() {
-    this.dataSource = new MatTableDataSource<WellListModel>(this.wellList);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.searchQueryInput = null;
+  RefreshGrid() {
+    this.PumpStatus = '';
+    this.ApprovalMode = '';
+    this.pageNumber = 1;
+    this.status = '';
+    this.searchText = '';
+    this.setGridData();
   }
 
   setDateSelected(option: any) {
     this.resetDateRangeFilters();
     switch (option) {
       case DateRanges.DAY:
-        let today = (new Date()).toISOString();
+        let today = new Date().toISOString();
         const filterValue = today.substring(0, 10);
         this.dataSource.filter = filterValue.trim().toLowerCase();
         break;
@@ -118,36 +284,94 @@ export class WellListComponent {
         let curr = new Date(); // get current date
         let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
         let last = first + 6; // last day is the first day + 6
-        let firstday = (new Date(curr.setDate(first))).toISOString();
-        let lastday = (new Date(curr.setDate(last))).toISOString();
+        let firstday = new Date(curr.setDate(first)).toISOString();
+        let lastday = new Date(curr.setDate(last)).toISOString();
         this.dataSource.filterPredicate = (data: any) => {
           if (firstday && lastday) {
             return data.time_stamp >= firstday && data.time_stamp <= lastday;
           }
           return true;
-        }
+        };
         this.dataSource.filter = '' + Math.random();
         break;
 
       case DateRanges.MONTH:
         let date = new Date();
-        let firstDay = (new Date(date.getFullYear(), date.getMonth(), 1)).toISOString();
-        let lastDay = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).toISOString();
+        let firstDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          1
+        ).toISOString();
+        let lastDay = new Date(
+          date.getFullYear(),
+          date.getMonth() + 1,
+          0
+        ).toISOString();
         this.dataSource.filterPredicate = (data: any) => {
           if (firstDay && lastDay) {
             return data.time_stamp >= firstDay && data.time_stamp <= lastDay;
           }
           return true;
-        }
+        };
         this.dataSource.filter = '' + Math.random();
         break;
     }
+  }
 
+  onChangeDemo(event: any) {
+    if (event.checked) {
+      if (this.selectedColumn.filter((resp) => event.source.value === resp)) {
+        this.selectedColumn.push(event.source.value);
+        this.displayedColumns = [
+          ...this.displayedColumns.filter(
+            (column: string) =>
+              !this.extraColumnsList.find(({ header }) => header === column)
+          ),
+          ...[...new Set(this.selectedColumn)],
+        ];
+        this.displayableExtraColumns = this.extraColumnsList.filter(
+          (extraColumn: { label: string; accessor: string; header: string }) =>
+            [...new Set(this.selectedColumn)].includes(extraColumn.header)
+        );
+      }
+    } else {
+      this.selectedColumn = this.selectedColumn.filter(function (e) {
+        return e !== event.source.value;
+      });
+      this.displayedColumns = [
+        ...this.displayedColumns.filter(
+          (column: string) =>
+            !this.extraColumnsList.find(({ header }) => header === column)
+        ),
+        ...this.selectedColumn,
+      ];
+      this.displayableExtraColumns = this.extraColumnsList.filter(
+        (extraColumn: { label: string; accessor: string; header: string }) =>
+          this.selectedColumn.includes(extraColumn.header)
+      );
+    }
+  }
+  public handlePage(e: any) {
+    this.pageNumber = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.sortDirection = this.sort.direction;
+    this.sortColumn =
+      typeof this.sort.active !== 'undefined' ? this.sort.active : '';
+    this.setGridData();
+  }
+
+  public onSortChanged(e: any) {
+    this.pageNumber = this.pageNumber;
+    this.pageSize = this.pageSize;
+    this.sortDirection = this.sort.direction;
+    this.sortColumn =
+      typeof this.sort.active !== 'undefined' ? this.sort.active : '';
+    this.setGridData();
   }
 
   resetDateRangeFilters() {
     // this.dataSource.filter = '';
-    this.refresh();
+    // this.refresh();
     let todaysDate = new Date();
     this.selectedRangeValue = new DateRange<Date>(todaysDate, null);
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
@@ -155,13 +379,13 @@ export class WellListComponent {
 
   applyDateRangeFilter() {
     let fromDate = this.selectedRangeValue.start?.toISOString();
-    let toDate = this.selectedRangeValue.end?.toISOString()
+    let toDate = this.selectedRangeValue.end?.toISOString();
     this.dataSource.filterPredicate = (data: any) => {
       if (fromDate && toDate) {
         return data.time_stamp >= fromDate && data.time_stamp <= toDate;
       }
       return true;
-    }
+    };
     this.dataSource.filter = '' + Math.random();
   }
 
@@ -179,5 +403,7 @@ export class WellListComponent {
     }
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
-
+  navigateToWellInfo(wellId: string) {
+    this.router.navigateByUrl(`/well-info`);
+  }
 }
