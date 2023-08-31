@@ -6,7 +6,8 @@ import { AlertsComponent } from './alerts.component';
 import { SharedModule } from '../shared/shared.module';
 import { AlertListComponent } from './components/alert-list/alert-list.component';
 import { CustomAlertComponent } from './components/custom-alert/custom-alert.component';
-
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,11 @@ import { CustomAlertComponent } from './components/custom-alert/custom-alert.com
   imports: [
     CommonModule,
     AlertsRoutingModule,
-    SharedModule
+    SharedModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
+    ReactiveFormsModule,
   ]
 })
 export class AlertsModule { }
