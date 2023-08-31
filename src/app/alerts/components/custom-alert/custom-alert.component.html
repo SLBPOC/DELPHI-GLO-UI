@@ -6,6 +6,7 @@
                 <h3>Create New Custom Alert</h3>
             </div>
             <hr>
+        
             <div class="row">
                 <div class="col-md-6">
                     <p>
@@ -63,12 +64,21 @@
                     <button mat-button>Create</button>
                 </div>
                 <div class="col-md-6">
-                    <!-- <mat-card class="demo-inline-calendar-card">
-                        <mat-calendar [(selected)]="selected"></mat-calendar>
-                      </mat-card> -->
+                    
+                    <mat-calendar [selected]="selectedRangeValue" (click)="$event.stopPropagation()"
+                    (selectedChange)="selectedChange($event)">
+                            </mat-calendar>              
+                           
+                            <ngx-mat-timepicker [(ngModel)]="date" [ngModelOptions]="{standalone: true}" [disabled]="disabled" [showSpinners]="showSpinners"
+                            [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [showSeconds]="showSeconds"
+                            [color]="color" [enableMeridian]="enableMeridian">
+                          </ngx-mat-timepicker>
                 </div>
-            </div>
-        </form>
+                </div>
+            
+                
+            </form>
+            
         </div>
         <div class="col-md-6">
             <div class="righthead">
@@ -102,8 +112,13 @@
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                       
                 </table>
+                <mat-paginator #paginator showFirstLastButtons [pageSizeOptions]="[5, 10, 20]"  aria-label="Select page">
+        </mat-paginator>
             </div>
             <hr>
         </div>
+        
     </div>
 </div>
+<hr>
+
