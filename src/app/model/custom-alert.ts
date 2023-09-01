@@ -9,4 +9,6 @@ export class customAlert {
     operator!:string;
     value!:string;
     isActive!:boolean;
+    startDate!:string;
+    endDate!:string;
 }
