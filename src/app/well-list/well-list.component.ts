@@ -38,51 +38,52 @@ export class WellListComponent {
     'WellName',
     'TimeStamp',
     'GLISetPoint',
-    'OLiq',
-    'QOil',
-    'Wc',
     'CompressorUpTime',
     'ProductionUpTime',
-    'CurrentGLISetpoint',
+    'DeviceUpTime',
     'CycleStatus',
+    'CurrentGLISetpoint',
+    'PreprocessorState',
     'ApprovalStatus',
     'ApprovalMode',
     'NoOfAlerts',
   ];
+  hidddenColumns: string[] = ['Ql', 'Qo', 'Qg', 'Qw', 'Wc'];
+
   approvalModeList: Option[] = [
     { id: '0', value: 'Manual' },
     { id: '1', value: 'Auto' },
   ];
   prodUptime: Option[] = [
-    { id: '0', value: 'Over Pumping' },
-    { id: '1', value: 'Optimum Pumping' },
-    { id: '2', value: 'Under Pumping' },
+    { id: '0', value: 'Approve' },
+    { id: '1', value: 'Discard' },
+    { id: '2', value: 'Override' },
   ];
   wellList!: WellListModel[];
   extraColumnsCtrl: any = new FormControl('');
   extraColumnsList: { label: string; accessor: string; header: string }[] = [
     {
-      label: 'GLISetPoint',
-      accessor: 'GLISetPoint',
-      header: 'GLISetPoint',
+      label: 'Ql',
+      accessor: 'Ql',
+      header: 'Ql',
     },
     {
-      label: 'CompressorUpTime',
-      accessor: 'CompressorUpTime',
-      header: 'CompressorUpTime',
+      label: 'Qo',
+      accessor: 'Qo',
+      header: 'Qo',
     },
     {
-      label: 'Production_Uptime',
-      accessor: 'Production_Uptime',
-      header: 'Production_Uptime',
+      label: 'Qg',
+      accessor: 'Qg',
+      header: 'Qg',
     },
-    { label: 'CycleStatus', accessor: 'CycleStatus', header: 'CycleStatus' },
+    { label: 'Wc', accessor: 'Wc', header: 'Wc' },
     {
-      label: 'CurrentGLISetpoint',
-      accessor: 'CurrentGLISetpoint',
-      header: 'CurrentGLISetpoint',
+      label: 'Qw',
+      accessor: 'Qw',
+      header: 'Qw',
     },
-    { label: 'ApprovalMode', accessor: 'ApprovalMode', header: 'ApprovalMode' },
+    // { label: 'ApprovalMode', accessor: 'ApprovalMode', header: 'ApprovalMode' },
   ];
 
   @ViewChild('searchQueryInput')
@@ -103,6 +104,7 @@ export class WellListComponent {
   searchString: string = '';
   sortDirection: string = '';
   sortColumn: string = '';
+  cycleStatus: string = '';
   pageSize: number = 5;
   pageNumber = 1;
   currentPage = 0;
@@ -187,7 +189,7 @@ export class WellListComponent {
     this.model.status = this.status ? this.status : '';
     this.model.field = this.sortColumn ? this.sortColumn : '';
     this.model.sortColumn = this.sortColumn ? this.sortColumn : '';
-    this.model.PumpStatus = this.PumpStatus ? this.PumpStatus : '';
+    this.model.cycleStatus = this.cycleStatus ? this.cycleStatus : '';
     this.model.ApprovalMode = this.ApprovalMode ? this.ApprovalMode : '';
 
     return this.model;
@@ -227,7 +229,7 @@ export class WellListComponent {
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
-    this.PumpStatus = value;
+    this.cycleStatus = value;
     this.pageNumber = 1;
     this.setGridData();
   }
@@ -263,7 +265,7 @@ export class WellListComponent {
   }
 
   RefreshGrid() {
-    this.PumpStatus = '';
+    this.cycleStatus = '';
     this.ApprovalMode = '';
     this.pageNumber = 1;
     this.status = '';
@@ -320,35 +322,13 @@ export class WellListComponent {
 
   onChangeDemo(event: any) {
     if (event.checked) {
-      if (this.selectedColumn.filter((resp) => event.source.value === resp)) {
-        this.selectedColumn.push(event.source.value);
-        this.displayedColumns = [
-          ...this.displayedColumns.filter(
-            (column: string) =>
-              !this.extraColumnsList.find(({ header }) => header === column)
-          ),
-          ...[...new Set(this.selectedColumn)],
-        ];
-        this.displayableExtraColumns = this.extraColumnsList.filter(
-          (extraColumn: { label: string; accessor: string; header: string }) =>
-            [...new Set(this.selectedColumn)].includes(extraColumn.header)
-        );
+      if (this.hidddenColumns.filter((resp) => event.source.value === resp)) {
+        this.displayedColumns.push(event.source.value);
       }
     } else {
-      this.selectedColumn = this.selectedColumn.filter(function (e) {
+      this.displayedColumns = this.displayedColumns.filter(function (e) {
         return e !== event.source.value;
       });
-      this.displayedColumns = [
-        ...this.displayedColumns.filter(
-          (column: string) =>
-            !this.extraColumnsList.find(({ header }) => header === column)
-        ),
-        ...this.selectedColumn,
-      ];
-      this.displayableExtraColumns = this.extraColumnsList.filter(
-        (extraColumn: { label: string; accessor: string; header: string }) =>
-          this.selectedColumn.includes(extraColumn.header)
-      );
     }
   }
   public handlePage(e: any) {

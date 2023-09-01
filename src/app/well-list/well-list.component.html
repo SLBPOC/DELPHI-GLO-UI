@@ -32,19 +32,19 @@
               class="button-type-none priority high"
               (click)="SeachByStatus('Over Pumping')"
             >
-              Over Pumping ( {{ OverPumping }} )
+              High ( {{ OverPumping }} )
             </li>
             <li
               class="button-type-none priority medium"
               (click)="SeachByStatus('Optimum Pumping')"
             >
-              Optimal Pumping ( {{ OptimumPumping }} )
+              Medium ( {{ OptimumPumping }} )
             </li>
             <li
               class="button-type-none priority low"
               (click)="SeachByStatus('Under Pumping')"
             >
-              Under Pumping ( {{ UnderPumping }} )
+              Low ( {{ UnderPumping }} )
             </li>
           </ul>
         </div>
@@ -364,15 +364,49 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>GLI SetPoint</th>
         <td mat-cell *matCellDef="let element">{{ element.GLISetPoint }}</td>
       </ng-container>
+
       <!-- Structural Load -->
-      <ng-container matColumnDef="OLiq">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>OLiq</th>
-        <td mat-cell *matCellDef="let element">{{ element.OLiq }}</td>
+      <ng-container
+        *ngFor="let eClumn of displayableExtraColumns"
+        [matColumnDef]="eClumn.header"
+      >
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>
+          {{ eClumn.label }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <a class="button-type-none"
+            >{{ element[eClumn.accessor].value }}
+            <span
+              *ngIf="
+                eClumn.label === 'Ql' ||
+                eClumn.label === 'Qo' ||
+                eClumn.label === 'Qg' ||
+                eClumn.label === 'Qw' ||
+                eClumn.label === 'Wc'
+              "
+              >%</span
+            >
+          </a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Ql">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>QL</th>
+        <td mat-cell *matCellDef="let element">{{ element.Ql }}</td>
       </ng-container>
       <!-- Avg Last 24hrs -->
-      <ng-container matColumnDef="QOil">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>QOil</th>
-        <td mat-cell *matCellDef="let element">{{ element.QOil }}</td>
+      <ng-container matColumnDef="Qg">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>QG</th>
+        <td mat-cell *matCellDef="let element">{{ element.Qg }}</td>
+      </ng-container>
+      <!-- Inferred Production -->
+      <ng-container matColumnDef="Qo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>QO</th>
+        <td mat-cell *matCellDef="let element">{{ element.Qo }}</td>
+      </ng-container>
+      <!-- Avg Last 24hrs -->
+      <ng-container matColumnDef="Qw">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>QW</th>
+        <td mat-cell *matCellDef="let element">{{ element.Qw }}</td>
       </ng-container>
       <!-- Inferred Production -->
       <ng-container matColumnDef="Wc">
@@ -388,6 +422,7 @@
           {{ element.CompressorUpTime }}
         </td>
       </ng-container>
+
       <!-- Mode Operation -->
       <ng-container matColumnDef="ProductionUpTime">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -395,6 +430,12 @@
         </th>
         <td mat-cell *matCellDef="let element">
           {{ element.ProductionUpTime }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="DeviceUpTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Uptime</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.DeviceUpTime }}
         </td>
       </ng-container>
       <!-- Status Operation -->
@@ -411,18 +452,30 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Cycle Status</th>
         <td mat-cell *matCellDef="let element">{{ element.CycleStatus }}</td>
       </ng-container>
+
+      <ng-container matColumnDef="PreprocessorState">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          PreprocessorState
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.PreprocessorState }}
+        </td>
+      </ng-container>
       <!--Auto/Manua-->
       <ng-container matColumnDef="ApprovalStatus">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Approve/Discard/Override
+          Current Cycle Status
         </th>
         <td mat-cell *matCellDef="let element">{{ element.ApprovalStatus }}</td>
       </ng-container>
       <!--Approve/Discard/ Override-->
       <ng-container matColumnDef="ApprovalMode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Auto/Manual</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Mode of Operation
+        </th>
         <td mat-cell *matCellDef="let element">{{ element.ApprovalMode }}</td>
       </ng-container>
+
       <!-- No Of Alerts(%) -->
       <ng-container matColumnDef="NoOfAlerts">
         <th mat-sort-header mat-header-cell *matHeaderCellDef>No Of Alerts</th>
@@ -432,56 +485,7 @@
       </ng-container>
 
       <!-- Dynamic Columns -->
-      <ng-container
-        *ngFor="let eClumn of displayableExtraColumns"
-        [matColumnDef]="eClumn.header"
-      >
-        <th mat-sort-header mat-header-cell *matHeaderCellDef>
-          {{ eClumn.label }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <a class="button-type-none"
-            >{{ element[eClumn.accessor].value }}
-            <span
-              *ngIf="
-                eClumn.label === 'GLISetPoint' ||
-                eClumn.label === 'CompressorUpTime' ||
-                eClumn.label === 'Production_Uptime' ||
-                eClumn.label === 'CurrentGLISetpoint' ||
-                eClumn.label === 'CycleStatus' ||
-                eClumn.label === 'ApprovalMode'
-              "
-              >%</span
-            >
-          </a>
-          <!-- <ng-template #tooltip>
-               <div style="width: 180px;" *ngIf="eClumn.header =='EffectiveRunTime'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.effectiveRunChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div>
-               <div style="width: 180px;" *ngIf="eClumn.header =='CyclesToday'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.cycleChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div> 
-               <div style="width: 180px;" *ngIf="eClumn.header =='StructuralLoad'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.structuralLoadChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div>
-               <div style="width: 180px;" *ngIf="eClumn.header =='MinMaxLoad'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.minMaxLoadChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div>
-               <div style="width: 180px;" *ngIf="eClumn.header =='GearboxLoad'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.gearBoxLoadChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div> 
-               <div style="width: 180px;" *ngIf="eClumn.header =='RodStress'">
-                  <highcharts-chart [Highcharts]="HighCharts" [options]="element.roadStressChartObj"
-                     style="width: 100%; min-height: 130px; display: block"></highcharts-chart>
-               </div>                   
-            </ng-template>  -->
-        </td>
-      </ng-container>
+
       <tr
         *matNoDataRow
         class="mat-mdc-row mdc-data-table__row cdk-row ng-star-inserted"
@@ -513,7 +517,7 @@
 
       <!-- Header row last-cycle group -->
       <ng-container matColumnDef="header-row-last-cycle-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="7">Last Cycle</th>
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">Last Cycle</th>
       </ng-container>
 
       <!-- Header row second group -->
