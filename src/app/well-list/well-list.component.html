@@ -30,21 +30,21 @@
           <ul>
             <li
               class="button-type-none priority high"
-              (click)="SeachByStatus('Over Pumping')"
+              (click)="SeachByStatus('High')"
             >
-              High ( {{ OverPumping }} )
+              High ( {{ High }} )
             </li>
             <li
               class="button-type-none priority medium"
-              (click)="SeachByStatus('Optimum Pumping')"
+              (click)="SeachByStatus('Medium')"
             >
-              Medium ( {{ OptimumPumping }} )
+              Medium ( {{ Medium }} )
             </li>
             <li
               class="button-type-none priority low"
-              (click)="SeachByStatus('Under Pumping')"
+              (click)="SeachByStatus('Low')"
             >
-              Low ( {{ UnderPumping }} )
+              Low ( {{ Low }} )
             </li>
           </ul>
         </div>
@@ -335,9 +335,9 @@
           <!-- <span class="high-priorityline">{{element?.status}}</span>  -->
           <span
             [ngClass]="
-              element.WellPriority === 'Over Pumping'
+              element.WellPriority === 'High'
                 ? 'high-priorityline'
-                : element.WellPriority === 'Optimum Pumping'
+                : element.WellPriority === 'Medium'
                 ? 'med-priorityline'
                 : 'low-priorityline'
             "
@@ -536,7 +536,7 @@
 
       <!-- Header row second group -->
       <ng-container matColumnDef="header-row-current-cycle-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="3">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
           Current Cycle
         </th>
       </ng-container>
