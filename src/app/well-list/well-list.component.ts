@@ -112,9 +112,9 @@ export class WellListComponent {
   currentPage = 0;
   totalCount = 0;
   TotalCount: number = 0;
-  OverPumping: number = 0;
-  OptimumPumping: number = 0;
-  UnderPumping: number = 0;
+  High: number = 0;
+  Medium: number = 0;
+  Low: number = 0;
   loading = true;
   model: any = {};
   displayableExtraColumns: {
@@ -172,9 +172,9 @@ export class WellListComponent {
           });
 
           this.TotalCount = response.totalCount;
-          this.OverPumping = response.totalWellPriorityHigh;
-          this.OptimumPumping = response.totalWellPriorityMedium;
-          this.UnderPumping = response.totalWellPriorityLow;
+          this.High = response.totalWellPriorityHigh;
+          this.Medium = response.totalWellPriorityMedium;
+          this.Low = response.totalWellPriorityLow;
           this.cycleStatus = response.cycleStatus;
           this.ApprovalMode = response.ApprovalMode;
         }
@@ -240,19 +240,13 @@ export class WellListComponent {
   getLegendCount() {
     this.service.getWellDetails().subscribe((resp) => {
       this.wellList = resp;
-      let high = this.wellList.filter(
-        (alert) => alert.WellPriority == 'Over Pumping'
-      );
+      let high = this.wellList.filter((alert) => alert.WellPriority == 'High');
       this.highCount = high.length;
 
-      let med = this.wellList.filter(
-        (alert) => alert.WellPriority == 'Optimum Pumping'
-      );
+      let med = this.wellList.filter((alert) => alert.WellPriority == 'Medium');
       this.medCount = med.length;
 
-      let low = this.wellList.filter(
-        (alert) => alert.WellPriority == 'Under Pumping'
-      );
+      let low = this.wellList.filter((alert) => alert.WellPriority == 'Low');
       this.lowCount = low.length;
     });
   }
