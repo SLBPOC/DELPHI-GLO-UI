@@ -34,21 +34,22 @@ enum DateRanges {
 })
 export class WellListComponent {
   displayedColumns: string[] = [
-    'PumpStatus',
+    'WellPriority',
     'WellName',
     'TimeStamp',
     'GLISetPoint',
     'CompressorUpTime',
     'ProductionUpTime',
     'DeviceUpTime',
-    'CycleStatus',
+    'LastCycleStatus',
     'CurrentGLISetpoint',
-    'PreprocessorState',
-    'ApprovalStatus',
+    'CurrentCycleStatus',
+    // 'PreprocessorState',
     'ApprovalMode',
+    'ApprovalStatus',
     'NoOfAlerts',
   ];
-  hidddenColumns: string[] = ['Ql', 'Qo', 'Qg', 'Qw', 'Wc'];
+  hidddenColumns: string[] = ['QLiq', 'QOil', 'Qg', 'Qw', 'Wc'];
 
   approvalModeList: Option[] = [
     { id: '0', value: 'Manual' },
@@ -63,14 +64,19 @@ export class WellListComponent {
   extraColumnsCtrl: any = new FormControl('');
   extraColumnsList: { label: string; accessor: string; header: string }[] = [
     {
-      label: 'Ql',
-      accessor: 'Ql',
-      header: 'Ql',
+      label: 'QOil',
+      accessor: 'QOil',
+      header: 'QOil',
     },
     {
-      label: 'Qo',
-      accessor: 'Qo',
-      header: 'Qo',
+      label: 'QLiq',
+      accessor: 'QLiq',
+      header: 'QLiq',
+    },
+    {
+      label: 'Qw',
+      accessor: 'Qw',
+      header: 'Qw',
     },
     {
       label: 'Qg',
@@ -78,11 +84,7 @@ export class WellListComponent {
       header: 'Qg',
     },
     { label: 'Wc', accessor: 'Wc', header: 'Wc' },
-    {
-      label: 'Qw',
-      accessor: 'Qw',
-      header: 'Qw',
-    },
+
     // { label: 'ApprovalMode', accessor: 'ApprovalMode', header: 'ApprovalMode' },
   ];
 
@@ -127,7 +129,7 @@ export class WellListComponent {
   status = this.seachByStatus;
   CycleStatus: string = '';
   ApprovalMode: string = '';
-  PumpStatus: string = '';
+  WellPriority: string = '';
   constructor(
     private _formBuilder: FormBuilder,
     private service: WellListService,
@@ -170,9 +172,11 @@ export class WellListComponent {
           });
 
           this.TotalCount = response.totalCount;
-          this.OverPumping = response.totalOverpumping;
-          this.OptimumPumping = response.totalOptimalPumping;
-          this.UnderPumping = response.totalUnderpumping;
+          this.OverPumping = response.totalWellPriorityHigh;
+          this.OptimumPumping = response.totalWellPriorityMedium;
+          this.UnderPumping = response.totalWellPriorityLow;
+          this.cycleStatus = response.cycleStatus;
+          this.ApprovalMode = response.ApprovalMode;
         }
       });
   }
@@ -188,9 +192,9 @@ export class WellListComponent {
     this.model.dir = this.sortDirection ? this.sortDirection : '';
     this.model.status = this.status ? this.status : '';
     this.model.field = this.sortColumn ? this.sortColumn : '';
-    this.model.sortColumn = this.sortColumn ? this.sortColumn : '';
-    this.model.cycleStatus = this.cycleStatus ? this.cycleStatus : '';
-    this.model.ApprovalMode = this.ApprovalMode ? this.ApprovalMode : '';
+    // this.model.sortColumn = this.sortColumn ? this.sortColumn : '';
+    // this.model.cycleStatus = this.cycleStatus ? this.cycleStatus : '';
+    // this.model.ApprovalMode = this.ApprovalMode ? this.ApprovalMode : '';
 
     return this.model;
     debugger;
@@ -224,12 +228,12 @@ export class WellListComponent {
     this.setGridData();
   }
   ApplyByFilter(value: string) {
-    this.ApprovalMode = value;
+    this.searchString = value;
     this.pageNumber = 1;
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
-    this.cycleStatus = value;
+    this.searchString = value;
     this.pageNumber = 1;
     this.setGridData();
   }
@@ -237,17 +241,17 @@ export class WellListComponent {
     this.service.getWellDetails().subscribe((resp) => {
       this.wellList = resp;
       let high = this.wellList.filter(
-        (alert) => alert.pumpStatus == 'Over Pumping'
+        (alert) => alert.WellPriority == 'Over Pumping'
       );
       this.highCount = high.length;
 
       let med = this.wellList.filter(
-        (alert) => alert.pumpStatus == 'Optimum Pumping'
+        (alert) => alert.WellPriority == 'Optimum Pumping'
       );
       this.medCount = med.length;
 
       let low = this.wellList.filter(
-        (alert) => alert.pumpStatus == 'Under Pumping'
+        (alert) => alert.WellPriority == 'Under Pumping'
       );
       this.lowCount = low.length;
     });
@@ -265,8 +269,8 @@ export class WellListComponent {
   }
 
   RefreshGrid() {
-    this.cycleStatus = '';
-    this.ApprovalMode = '';
+    this.searchString = '';
+    // this.ApprovalMode = '';
     this.pageNumber = 1;
     this.status = '';
     this.searchText = '';
@@ -323,7 +327,8 @@ export class WellListComponent {
   onChangeDemo(event: any) {
     if (event.checked) {
       if (this.hidddenColumns.filter((resp) => event.source.value === resp)) {
-        this.displayedColumns.push(event.source.value);
+        // this.displayedColumns.push(event.source.value);
+        this.displayedColumns.splice(5, 0, event.source.value);
       }
     } else {
       this.displayedColumns = this.displayedColumns.filter(function (e) {
