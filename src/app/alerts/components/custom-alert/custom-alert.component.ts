@@ -6,6 +6,7 @@ import { CustomAlertService } from 'src/app/shared/custom-alert.service';
 import { ThemePalette } from '@angular/material/core';
 import { DateRange } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-custom-alert',
   templateUrl: './custom-alert.component.html',
@@ -52,7 +53,7 @@ export class CustomAlertComponent {
       };
       @Input() selectedRangeValue!: DateRange<Date>;
       @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
-    constructor(private fb: FormBuilder,private CustomAlertService:CustomAlertService ,private zone: NgZone) {
+    constructor(private fb: FormBuilder,private CustomAlertService:CustomAlertService ,private dialogRef: MatDialogRef<CustomAlertComponent>) {
      
     }
     ngOnInit() {
@@ -178,5 +179,12 @@ export class CustomAlertComponent {
       this.customAlertForm.get('Category')?.reset();
       this.customAlertForm.get('Operator')?.reset();
       this.customAlertForm.get('Value')?.reset();
+    }
+    cancel()
+    {
+      this.clear();
+    }
+    close(){
+      this.dialogRef.close();
     }
 }
