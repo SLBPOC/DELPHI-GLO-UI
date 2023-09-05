@@ -4,7 +4,7 @@ import theme from 'highcharts/themes/brand-dark';
 theme(Highcharts);
 import More from 'highcharts/highcharts-more'
 import { Subscription } from 'rxjs';
-import { AlgorithmsAndMitigationsService } from '../../services/algorithms-and-mitigations.service';
+import { AlgorithmsAndMitigationsService } from '../../../shared/services/algorithms-and-mitigations.service';
 // import Highcharts from 'highcharts'
 More(Highcharts)
 

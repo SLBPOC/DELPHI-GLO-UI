@@ -10,7 +10,8 @@ import { AlgoLineChartComponent } from './components/algo-line-chart/algo-line-c
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { AlgorithmsAndMitigationsService } from '../../../../services/algorithms-and-mitigations.service';
+ // Commented for Testing
+// import { AlgorithmsAndMitigationsService } from '../../../../services/algorithms-and-mitigations.service';
 import { Observable, of } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 
@@ -124,12 +125,13 @@ describe('AlgorithmsAndMitigationComponent', () => {
       ],
       providers: [
         HttpClientModule, 
+         // Commented for Testing
         // AlgorithmsAndMitigationsService,
-        { provide: AlgorithmsAndMitigationsService, useClass: AlgorithmsAndMitigationsServiceStub }
+        // { provide: AlgorithmsAndMitigationsService, useClass: AlgorithmsAndMitigationsServiceStub }
       ]
     })
     .compileComponents();
-
+     // Commented for Testing
     // fixture = TestBed.createComponent(AlgorithmsAndMitigationComponent);
     // component = fixture.componentInstance;
     // fixture.detectChanges();

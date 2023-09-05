@@ -12,7 +12,7 @@ interface Food {
 })
 export class CreateCustomFeedComponent {
 
-  @Input() isEnable : Boolean;
+  @Input() isEnable! : Boolean;
   
   
   foods: Food[] = [
