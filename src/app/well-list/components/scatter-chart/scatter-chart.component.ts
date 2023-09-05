@@ -3,7 +3,7 @@ import * as Highcharts from 'highcharts';
 import theme from 'highcharts/themes/brand-dark';
 theme(Highcharts);
 import { Subscription } from 'rxjs';
-import { AlgorithmsAndMitigationsService } from '../../services/algorithms-and-mitigations.service';
+import { AlgorithmsAndMitigationsService } from '../../../shared/services/algorithms-and-mitigations.service';
 
 @Component({
   selector: 'app-scatter-chart',
