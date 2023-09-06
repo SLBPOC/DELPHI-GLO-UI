@@ -177,17 +177,46 @@ export class EventsListComponent implements AfterViewInit {
     this.loading = true;
     var SearchModel = this.createModel();
     this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize, this.searchString,startDate, endDate, eventStatus, eventType).subscribe(response => {
-      if (response.hasOwnProperty('data')) {
-        this.loading = false;
-        debugger;
-        this.eventList = response.data;
-        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = response.totalCount;
-        });
-      }
-    });
+    //   if (response.hasOwnProperty('data')) {
+    //     this.loading = false;
+    //     debugger;
+    //     this.eventList = response.data;
+    //     this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+    //     setTimeout(() => {
+    //       this.paginator.pageIndex = this.currentPage;
+    //       this.paginator.length = response.totalCount;
+    //     });
+    //   }
+    // });
+    if (response.status != 404) {
+
+      this.loading = false;
+
+      this.eventList = response.data;
+
+      this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+
+      setTimeout(() => {
+
+        this.totalCount = response.totalCount;
+
+        this.paginator.pageIndex = this.currentPage;
+
+        this.paginator.length = response.totalCount;
+
+      });
+
+    }
+
+  },(err) => {
+
+    this.loading = false;
+
+    this.eventList = []
+
+    this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+
+  });
   }
  
   searchModel(this: any) {
