@@ -222,9 +222,9 @@
     </table>
 
     <mat-paginator #paginator [length]="totalCount" [pageIndex]="pageNumber" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 20]" (page)="pageChanged($event)" aria-label="Select page">
+      [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons  (page)="pageChanged($event)" aria-label="Select page">
     </mat-paginator>
-    <!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <!-- <button mat-icon-button [matMeshowFirstLastButtonsnuTriggerFor]="appMenu">
 
       <mat-icon>calendar_today</mat-icon>
 
