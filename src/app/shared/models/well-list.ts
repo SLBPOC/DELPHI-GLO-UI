@@ -1,5 +1,5 @@
 export interface WellListModel {
-  WellPriority: string;
+  wellPriority: string;
   id: number;
   WellName: string;
   time_stamp: string;
