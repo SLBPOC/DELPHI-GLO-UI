@@ -107,8 +107,9 @@ export class WellListComponent {
   sortDirection: string = '';
   sortColumn: string = '';
   cycleStatus: string = '';
+  pageIndex: number = 1;
   pageSize: number = 5;
-  pageNumber = 1;
+  pageNumber: number = 1;
   currentPage = 0;
   totalCount = 0;
   TotalCount: number = 0;
@@ -122,6 +123,14 @@ export class WellListComponent {
     accessor: string;
     header: string;
   }[] = [];
+  searchsortExpression: any;
+  sortExpression: any = [
+    {
+      dir: this.sortDirection !== 'undefined' ? this.sortDirection : '',
+      field: this.sortColumn !== 'undefined' ? this.sortColumn : '',
+    },
+  ];
+  // sortExpression: any = [];
 
   // searchInput: any;
   searchText: any;
@@ -129,7 +138,7 @@ export class WellListComponent {
   status = this.seachByStatus;
   CycleStatus: string = '';
   ApprovalMode: string = '';
-  WellPriority: string = '';
+  wellPriority: string = '';
   constructor(
     private _formBuilder: FormBuilder,
     private service: WellListService,
@@ -155,9 +164,16 @@ export class WellListComponent {
 
   setGridData() {
     this.loading = true;
-    var SearchModel = this.createModel();
+
+    let sortExpression = this.createModel();
+    // this.createModel();
     this.service
-      .getWellDetailsWithFilters(SearchModel)
+      .getWellDetailsWithFilters(
+        this.pageIndex,
+        this.pageSize,
+        this.searchString,
+        sortExpression
+      )
       .subscribe((response) => {
         if (response.hasOwnProperty('data')) {
           this.loading = false;
@@ -185,23 +201,29 @@ export class WellListComponent {
 
   createModel(this: any) {
     console.log(this.pageSize + this.model);
-    this.model.pageSize = this.pageSize;
-    this.model.pageNumber = this.pageNumber;
-    this.model.searchString = this.searchString ? this.searchString : '';
-    this.model.skip = this.skip ? this.skip : 0;
+    // this.model.pageSize = this.pageSize;
+    // this.model.pageNumber = this.pageNumber;
+    // this.model.status = this.status ? this.status : '';
+    // this.model.searchString = this.searchString ? this.searchString : '';
+    // this.model.skip = this.skip ? this.skip : 0;
+    let obj = {
+      dir: this.sortDirection ? this.sortDirection : '',
+      field: this.sortColumn ? this.sortColumn : '',
+    };
     this.model.dir = this.sortDirection ? this.sortDirection : '';
-    this.model.status = this.status ? this.status : '';
-    this.model.field = this.sortColumn ? this.sortColumn : '';
+    this.model.field = this.sortColumn;
     // this.model.sortColumn = this.sortColumn ? this.sortColumn : '';
     // this.model.cycleStatus = this.cycleStatus ? this.cycleStatus : '';
     // this.model.ApprovalMode = this.ApprovalMode ? this.ApprovalMode : '';
-
+    this.model = [];
+    this.model.push(obj);
     return this.model;
     debugger;
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     fromEvent<any>(this.searchInput.nativeElement, 'keyup')
       .pipe(
         map((event) => event.target.value),
@@ -219,34 +241,34 @@ export class WellListComponent {
     console.log({ event });
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
-    this.pageNumber = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex + 1;
     this.setGridData();
   }
   SeachByStatus(status: string) {
-    this.status = status;
+    this.searchString = status;
     this.pageNumber = 1;
     this.setGridData();
   }
   ApplyByFilter(value: string) {
     this.searchString = value;
-    this.pageNumber = 1;
+    // this.pageNumber = 1;
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
     this.searchString = value;
-    this.pageNumber = 1;
+    // this.pageNumber = 1;
     this.setGridData();
   }
   getLegendCount() {
     this.service.getWellDetails().subscribe((resp) => {
       this.wellList = resp;
-      let high = this.wellList.filter((alert) => alert.WellPriority == 'High');
+      let high = this.wellList.filter((alert) => alert.wellPriority == 'High');
       this.highCount = high.length;
 
-      let med = this.wellList.filter((alert) => alert.WellPriority == 'Medium');
+      let med = this.wellList.filter((alert) => alert.wellPriority == 'Medium');
       this.medCount = med.length;
 
-      let low = this.wellList.filter((alert) => alert.WellPriority == 'Low');
+      let low = this.wellList.filter((alert) => alert.wellPriority == 'Low');
       this.lowCount = low.length;
     });
   }
@@ -256,18 +278,18 @@ export class WellListComponent {
     this.dataSource.filter = val;
   }
   ClearSearch() {
-    this.pageNumber = 1;
-    this.status = '';
-    this.searchText = '';
+    this.searchString = '';
+    this.pageIndex;
+    this.pageSize;
+    this.sortExpression;
     this.setGridData();
   }
 
   RefreshGrid() {
     this.searchString = '';
-    // this.ApprovalMode = '';
-    this.pageNumber = 1;
-    this.status = '';
-    this.searchText = '';
+    this.pageIndex;
+    this.pageSize;
+    this.sortExpression;
     this.setGridData();
   }
 
@@ -331,7 +353,7 @@ export class WellListComponent {
     }
   }
   public handlePage(e: any) {
-    this.pageNumber = e.pageIndex;
+    this.pageIndex = e.pageIndex;
     this.pageSize = e.pageSize;
     this.sortDirection = this.sort.direction;
     this.sortColumn =
@@ -342,6 +364,8 @@ export class WellListComponent {
   public onSortChanged(e: any) {
     this.pageNumber = this.pageNumber;
     this.pageSize = this.pageSize;
+    this.searchString = this.searchString;
+    this.sortExpression = this.sortExpression;
     this.sortDirection = this.sort.direction;
     this.sortColumn =
       typeof this.sort.active !== 'undefined' ? this.sort.active : '';

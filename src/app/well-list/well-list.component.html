@@ -232,10 +232,11 @@
       <div class="align-center">
         <div class="select-filter">
           <div class="select-filter-header">
-            <div class="select-filter-title">Filter by</div>
+            <div class="select-filter-title">Filter by111</div>
             <button
               mat-icon-button
               class="calender-alrt-filter-close button-type-none"
+              (click)="RefreshGrid()"
             >
               <svg
                 width="16"
@@ -254,7 +255,7 @@
             </button>
           </div>
           <div class="select-filter-section" (click)="$event.stopPropagation()">
-            <div class="select-lbl">Production uptime</div>
+            <div class="select-lbl">Approval Status</div>
             <mat-form-field>
               <mat-select
                 placeholder="Select Production uptime"
@@ -466,7 +467,7 @@
       <!--Auto/Manua-->
       <ng-container matColumnDef="ApprovalStatus">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Current Cycle Status
+          Approve/Discard/Override
         </th>
         <td mat-cell *matCellDef="let element">
           {{ element.ApprovalStatus }}
@@ -474,9 +475,7 @@
       </ng-container>
       <!--Approve/Discard/ Override-->
       <ng-container matColumnDef="ApprovalMode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Mode of Operation
-        </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Auto/Manual</th>
         <td mat-cell *matCellDef="let element">
           {{ element.ApprovalMode }}
         </td>
