@@ -28,7 +28,7 @@
 
           <input id="searchQueryInput" #searchQueryInput type="text" name="searchQueryInput" [(ngModel)]="searchString"
             placeholder="Search">
-          <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" (click)="GetEventDetailsWithFilters()">
+          <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" (click)="GetEventDetailsWithFilters(this.startDate,this.endDate,this.EventType,this.eventStatus)">
             <img matbuttonicon="" alt="" class="" src="./assets/images/close-icon.svg" (click)="clearSearch()"></button>
 
         </div>
@@ -118,11 +118,11 @@
 
           <div class="select-filter-section" (click)="$event.stopPropagation()">
 
-            <div class="select-lbl">Alert Type</div>
+            <div class="select-lbl">Event Type</div>
 
             <mat-form-field>
 
-              <mat-select  #matSelect  placeholder="Select Alert Type" (selectionChange)="getType($event)"[(value)]="eventFormModel.eventType">
+              <mat-select  #matSelect  placeholder="Select Event Type" (selectionChange)="getType($event)"[(value)]="eventFormModel.eventType">
 
                 <mat-option *ngFor="let food of EventType" [value]="food.viewValue">
 
@@ -222,7 +222,7 @@
     </table>
 
     <mat-paginator #paginator [length]="totalCount" [pageIndex]="pageNumber" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons (page)="pageChanged($event)" aria-label="Select page">
+      [pageSizeOptions]="[5, 10, 20]" (page)="pageChanged($event)" aria-label="Select page">
     </mat-paginator>
     <!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
 

@@ -66,15 +66,21 @@ export class EventsListComponent implements AfterViewInit {
   daysSelected: any[] = [];
   event: any;
   searchString: string = "";
-  model: any = {};
+  eventStatus:string="";
+  eventType:string="";
+  model: any = [];
   seachByStatus: string = "";
   sortDirection: string = "";
   sortColumn: string = "";
-  pageSize: number = 5;
+  pageSize: number = 10;
   pageNumber: number = 1;
-  pageIndex: number = 0;
+  pageIndex: number = 1;
   skip = 0;
+  sortExpression = [{ dir: 'asc', field: 'name' }];
+  startDate=new Date();
+  endDate=new Date;
   currentPage = 0;
+  searchModel1 : any[] = [];
   todayDate: Date = new Date();
   eventFormModel: EventFormModel = new EventFormModel();
   slbSearchParams: SLBSearchParams = new SLBSearchParams();
@@ -87,12 +93,13 @@ export class EventsListComponent implements AfterViewInit {
     "CreationDateTime"
   ];
 
-  eventTypes = ['High', 'Medium', 'Low'];
+  eventTypes = ['Type1', 'Type2', 'Type3'];
   statuses = ['Completed', 'In Progress'];
   range = new FormGroup({
     start: new FormControl(),
     end: new FormControl(),
   });
+  
   pipe!: DatePipe;
   loading = true;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -108,7 +115,7 @@ export class EventsListComponent implements AfterViewInit {
 
   ngOnInit() {
 
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsWithFilters(null,null,null,null);
   }
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   ngAfterViewInit() {
@@ -121,14 +128,35 @@ export class EventsListComponent implements AfterViewInit {
       tap(x => this.searchString = x)
     ).subscribe(x => {
       if (x != undefined && x.trim() != "") {
-        this.GetEventDetailsWithFilters();
+        this.GetEventDetailsWithFilters(null,null,this.EventType,this.eventStatus);
       }
     });
   }
-  GetEventDetailsWithFilters() {
+  GetEventDetailsWithFilters(startDate: any, endDate: any, eventStatus: any, eventType: any) {
+    debugger;
+    this.eventList=[];
     this.loading = true;
-    var SearchModel = this.searchModel();
-    this.service.getEventDetailsWithFilters(SearchModel).subscribe(response => {
+    var SearchModel = this.createModel();
+    this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize,this.searchString, startDate,endDate,eventType,eventStatus).subscribe(response => {
+      if (response.hasOwnProperty('data')) {
+        this.loading = false;
+        this.eventList = response.data;
+        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+        setTimeout(() => {
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.length = response.totalCount;
+        });
+
+        this.totalCount = response.totalCount;
+      }
+    });
+  }
+  GetEventDetailsPage(pageIndex:any ,pageSize:any) {
+    debugger;
+    this.eventList=[];
+    this.loading = true;
+    var SearchModel = this.createModel();
+    this.service.getEventDetailsWithFilters(SearchModel,pageIndex,pageSize).subscribe(response => {
       if (response.hasOwnProperty('data')) {
         this.loading = false;
         this.eventList = response.data;
@@ -144,11 +172,14 @@ export class EventsListComponent implements AfterViewInit {
   }
 
   GetEventListWithDateFilters(startDate: any, endDate: any, eventStatus: any, eventType: any) {
+    debugger;
+    this.eventList=[];
     this.loading = true;
-    var SearchModel = this.searchModel();
-    this.service.getEventDetailsWithFilters(SearchModel, startDate, endDate, eventStatus, eventType).subscribe(response => {
+    var SearchModel = this.createModel();
+    this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize, this.searchString,startDate, endDate, eventStatus, eventType).subscribe(response => {
       if (response.hasOwnProperty('data')) {
         this.loading = false;
+        debugger;
         this.eventList = response.data;
         this.dataSource = new MatTableDataSource<EventList>(this.eventList);
         setTimeout(() => {
@@ -158,23 +189,42 @@ export class EventsListComponent implements AfterViewInit {
       }
     });
   }
+ 
   searchModel(this: any) {
-    this.model.pageNumber = this.pageNumber;
-    this.model.pageSize = this.pageSize;
-    this.model.skip = this.skip;
-    this.model.searchString = this.searchString ? this.searchString : "";
-    this.model.field = this.sortColumn ? this.sortColumn : "";
-    this.model.dir = this.sortDirection ? this.sortDirection : "";
-    this.model.status = this.seachByStatus ? this.seachByStatus : "";
+    // this.model.pageNumber = this.pageNumber;
+    // this.model.pageSize = this.pageSize;
+    // this.model.skip = this.skip;
+    // this.model.searchString = this.searchString ? this.searchString : "";
+    let obj = {
+
+      "field": this.sortColumn ? this.sortColumn : "",
+
+    "dir": this.sortDirection ? this.sortDirection : ""
+
+    }
+    this.model.push(obj);
+   // this.model.status = this.seachByStatus ? this.seachByStatus : "";
     return this.model;
   }
+  createModel(this: any) {
+    let obj = {
 
+      "field": this.sortColumn ? this.sortColumn : "",
+
+    "dir": this.sortDirection ? this.sortDirection : ""
+
+    }
+    this.model.push(obj);
+
+    return this.model;
+
+  }
 
   pageChanged(event: PageEvent) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
     this.pageNumber = event.pageIndex + 1;
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
   }
 
   onSortChanged(e: any) {
@@ -182,20 +232,20 @@ export class EventsListComponent implements AfterViewInit {
     this.pageSize = this.pageSize;
     this.sortDirection = this.sort.direction;
     this.sortColumn = (typeof this.sort.active !== "undefined") ? this.sort.active : "";
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
   }
   clearSearch() {
     this.pageNumber = 1;
     this.seachByStatus = "";
     this.searchString = "";
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
   }
 
   refresh() {
     this.pageNumber = 1;
     this.seachByStatus = "";
     this.searchString = "";
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
   }
 
   setDateSelected(option: any) {
@@ -257,7 +307,7 @@ export class EventsListComponent implements AfterViewInit {
 
   applyDateRangeFilter() {
 
-
+    debugger;
     let fromDate = this.selectedRangeValue.start;
     let toDate = this.selectedRangeValue.end;
     let startDate = fromDate?.getFullYear() + '-' + this.getSelectedMonth(fromDate?.getMonth()) + '-' + this.getSelectedDay(fromDate?.getDate());
@@ -303,9 +353,9 @@ export class EventsListComponent implements AfterViewInit {
     console.log(value);
   }
   EventType: Food[] = [
-    { value: '1', viewValue: 'High' },
-    { value: '2', viewValue: 'Medium' },
-    { value: '3', viewValue: 'Low' },
+    { value: '1', viewValue: 'Type1' },
+    { value: '2', viewValue: 'Type2' },
+    { value: '3', viewValue: 'Type3' },
   ];
   EventStatus: Food[] = [
     { value: '1', viewValue: 'Completed' },
@@ -315,7 +365,7 @@ export class EventsListComponent implements AfterViewInit {
     this.eventFormModel.eventType = 0;
     this.eventFormModel.status = 0;
     this.clearParams(['eventType', 'status']);
-    this.GetEventDetailsWithFilters();
+    this.GetEventDetailsWithFilters(this.startDate,this.endDate,this.EventType,this.eventStatus);
   }
   clearParams(paramName: string[]) {
     if (
