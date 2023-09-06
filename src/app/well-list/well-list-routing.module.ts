@@ -10,10 +10,13 @@ const routes: Routes = [
   {
     path: '',
     component: WellListComponent,
-    // children: [
-    //   { path: 'algorithms-and-mitigations', component: AlgorithmsAndMitigationComponent },
+    children: [
+      {
+        path: 'well-view-tabs',
+        component: WellViewTabsComponent,
+      }
 
-    // ]
+    ]
   },
   {
     path: 'well-info',
@@ -23,10 +26,10 @@ const routes: Routes = [
     path: 'well-detail-view',
     component: WellDetailViewComponent,
   },
-  {
-    path: 'well-view-tabs',
-    component: WellViewTabsComponent,
-  },
+  // {
+  //   path: 'well-list/well-view-tabs',
+  //   component: WellViewTabsComponent,
+  // },
 ];
 
 @NgModule({

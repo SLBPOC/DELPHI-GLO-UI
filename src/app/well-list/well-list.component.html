@@ -348,7 +348,7 @@
         <ng-container matColumnDef="WellName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Well Name.</th>
           <td mat-cell *matCellDef="let element" id="well_name">
-            <a [routerLink]="['/well-info']"> {{ element.WellName }}</a>
+            <a routerLink="well-view-tabs"> {{ element.WellName }}</a>
             <!-- <a>{{ element.WellName }}</a> -->
           </td>
         </ng-container>
