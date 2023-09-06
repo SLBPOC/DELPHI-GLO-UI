@@ -19,17 +19,23 @@ export class AlertListService {
     // return this.http.get<AlertList[]>(this._apiUrl + 'api/alerts/');
   }
 
-  getAlertDetailsWithFilters(searchModel:any, startDate?: Date, endDate?: Date): Observable<any> {
-    if(startDate && endDate){
-      return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/GetAlertsList?startDate=${startDate}&endDate=${endDate}`, searchModel); 
-      // http://localhost:50283/api/Alerts/GetAlertsList?startDate=2023-08-20&endDate=2023-08-24         
+  getAlertDetailsWithFilters(searchModel:any, pageIndex?: number, pageSize?: number, searchString?: string, startDate?: Date, endDate?: Date): Observable<any> {
+    if(startDate && endDate)
+    {
+      return this.http.post<AlertList[]>(this._apiUrl + 
+        `api/Alerts/GetAlertsList?pageIndex=${pageIndex}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`,searchModel);
+       
+    }
+    else if (searchString != "") {
+      return this.http.post<AlertList[]>(this._apiUrl + 
+        `api/Alerts/GetAlertsList?pageIndex=${pageIndex}&pageSize=${pageSize}&searchString=${searchString}`,searchModel);
     }
     else {
-      return this.http.post<AlertList[]>(this._apiUrl + 'api/Alerts/GetAlertsList', searchModel);          
+      return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/GetAlertsList?pageIndex=${pageIndex}&pageSize=${pageSize}`,searchModel);
     }
   }
 
-  getSnoozedAlerts(alertId: number, snoozeBy: string, searchModel?: any): Observable<any> {
+  getSnoozedAlerts(alertId: number, snoozeBy: number, searchModel?: any): Observable<any> {
     return this.http.post<AlertList[]>(this._apiUrl + `api/Alerts/GetSnoozeByAlert?alertId=${alertId}&snoozeBy=${snoozeBy}`, searchModel);
   }
 
