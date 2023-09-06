@@ -73,15 +73,18 @@ export class EventListService {
   //     return 0;
   //   }); //a[sort.active].localeCompare(b[sort.active]));
   // }
-  getEventDetailsWithFilters(searchModel: any, startDate?: Date, endDate?: Date, eventType?: any, eventStatus?: any): Observable<any> {
+  getEventDetailsWithFilters(searchModel: any,pageIndex? :any,pageSize?:any, searchString?:any, startDate?: Date, endDate?: Date, eventType?: any, eventStatus?: any): Observable<any> {
     if (startDate && endDate) {
-      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?startDate=${startDate}&endDate=${endDate}&eventType=${eventType}&eventStatus=${eventStatus}`, searchModel);       
+      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?pageIndex=${pageIndex}&pageSize=${pageSize}&startDate=${startDate}&endDate=${endDate}`, searchModel);       
     }
    else if (eventStatus && eventType) {
-      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?startDate=${startDate}&endDate=${endDate}&eventType=${eventType}&eventStatus=${eventStatus}`, searchModel);       
+      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?pageIndex=${pageIndex}&pageSize=${pageSize}&eventType=${eventType}&eventStatus=${eventStatus}`, searchModel);       
+    }
+    else if (searchString) {
+      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?pageIndex=${pageIndex}&pageSize=${pageSize}&searchString=${searchString}`, searchModel);       
     }
     else {
-      return this.http.post<EventList[]>(this._apiUrl + 'api/Event/GetEventList', searchModel);
+      return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?pageIndex=${pageIndex}&pageSize=${pageSize}`, searchModel);
     }
   }
 }

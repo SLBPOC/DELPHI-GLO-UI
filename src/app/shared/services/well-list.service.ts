@@ -22,10 +22,16 @@ export class WellListService {
     // return this.http.get<WellListModel[]>(wellData);
     return this.http.get<any[]>(this.apiUrl + 'Well');
   }
-  getWellDetailsWithFilters(searchModel: any): Observable<any> {
+  getWellDetailsWithFilters(
+    pageIndex: any,
+    pageSize: any,
+    searchString: any,
+    searchsortExpression: any
+  ): Observable<any> {
     return this.http.post<WellListModel[]>(
-      this.apiUrl + 'Well/GetWellList',
-      searchModel,
+      this.apiUrl +
+        `Well/GetWellList?pageIndex=${pageIndex}&pageSize=${pageSize}&searchString=${searchString}`,
+      searchsortExpression,
       this.httpOptions
     );
   }
