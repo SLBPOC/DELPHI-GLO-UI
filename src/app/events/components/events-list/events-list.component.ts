@@ -136,6 +136,7 @@ export class EventsListComponent implements AfterViewInit {
     debugger;
     this.eventList=[];
     this.loading = true;
+    this.model=[];
     var SearchModel = this.createModel();
     this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize,this.searchString, startDate,endDate,eventType,eventStatus).subscribe(response => {
       if (response.hasOwnProperty('data')) {
@@ -155,6 +156,7 @@ export class EventsListComponent implements AfterViewInit {
     debugger;
     this.eventList=[];
     this.loading = true;
+    this.model=[];
     var SearchModel = this.createModel();
     this.service.getEventDetailsWithFilters(SearchModel,pageIndex,pageSize).subscribe(response => {
       if (response.hasOwnProperty('data')) {
@@ -175,6 +177,7 @@ export class EventsListComponent implements AfterViewInit {
     debugger;
     this.eventList=[];
     this.loading = true;
+    this.model=[];
     var SearchModel = this.createModel();
     this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize, this.searchString,startDate, endDate, eventStatus, eventType).subscribe(response => {
     //   if (response.hasOwnProperty('data')) {
@@ -394,7 +397,7 @@ export class EventsListComponent implements AfterViewInit {
     this.eventFormModel.eventType = 0;
     this.eventFormModel.status = 0;
     this.clearParams(['eventType', 'status']);
-    this.GetEventDetailsWithFilters(this.startDate,this.endDate,this.EventType,this.eventStatus);
+    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
   }
   clearParams(paramName: string[]) {
     if (
