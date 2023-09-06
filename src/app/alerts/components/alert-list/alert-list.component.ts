@@ -46,10 +46,10 @@ export class AlertListComponent {
   pageNumber = 1;
   skip = 0;
   currentPage = 0;
-  model: any = {};
+  model: any = [];
   seachByStatus: string = "";
   loading = true;
-  snoozeByTime: string = '1h';
+  snoozeByTime: number = 1;
   showSnoozeDialog: boolean = false;
   totalCount: number = 0;
 
@@ -64,7 +64,6 @@ export class AlertListComponent {
   constructor(private service: AlertListService,public dialog: MatDialog) { }
 
   ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
     fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
       map(event => event.target.value),
       debounceTime(500),
@@ -88,12 +87,12 @@ export class AlertListComponent {
   
   GetAlertDetailsWithFilters() {
     this.loading = true;
+    this.model = [];
     var SearchModel = this.createModel();
-    this.service.getAlertDetailsWithFilters(SearchModel).subscribe(response => {
-      if (response.hasOwnProperty('data')) {
+    this.service.getAlertDetailsWithFilters(SearchModel, this.pageNumber, this.pageSize, this.searchString).subscribe(response => {
+      if (response.status != 404) {
         this.loading = false;
         this.alertList = response.data;
-        // this.alertList.forEach(x => this.prepareChart(x));
         this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
         this.getLegendCount();
         this.moveClearAlertsToBottom();
@@ -106,14 +105,20 @@ export class AlertListComponent {
         this.paginator.pageIndex = this.currentPage;
         this.paginator.length = response.totalCount;
       }
-    });
+    },(err) => {
+      this.loading = false;
+      this.alertList = []
+      this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+    }
+    );
   }
 
   GetAlertListWithDateFilters(startDate : any, endDate: any) {
     this.loading = true;
+    this.model = [];
     var SearchModel = this.createModel();
-    this.service.getAlertDetailsWithFilters(SearchModel, startDate, endDate).subscribe(response => {
-      if (response.hasOwnProperty('data')) {
+    this.service.getAlertDetailsWithFilters(SearchModel, this.pageNumber, this.pageSize, this.searchString, startDate, endDate).subscribe(response => {
+      if (response.status != 404) {
         this.loading = false;
         this.alertList = response.data;
         this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
@@ -125,18 +130,23 @@ export class AlertListComponent {
           this.paginator.length = response.totalCount;
         });
       }
+    },(err) => {
+      this.loading = false;
+      this.alertList = []
+      this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
     });
   }
 
   //Create Model for search
   createModel(this: any) {
-    this.model.pageNumber = this.pageNumber;
-    this.model.pageSize = this.pageSize;
-    this.model.skip = this.skip;
-    this.model.searchString = this.searchString ? this.searchString : "";
-    this.model.field = this.sortColumn ? this.sortColumn : "";
-    this.model.dir = this.sortDirection ? this.sortDirection : "";
-    this.model.status = this.seachByStatus ? this.seachByStatus : "";
+    this.pageNumber = this.pageNumber;
+    this.pageSize = this.pageSize;
+    let obj = {
+      "field": this.sortColumn ? this.sortColumn : "",
+      "dir": this.sortDirection ? this.sortDirection : ""
+    }
+    this.searchString = this.searchString ? this.searchString : "";
+    this.model.push(obj);
     return this.model;
   }
 
@@ -206,9 +216,8 @@ export class AlertListComponent {
     this.loading = true;
     this.service.clearAlerts(alert.Id, comment).subscribe((data: any) => {
       this.clearAlertsComments = "";
-      if (data == true) {
+      if (data.success == true) {
         this.GetAlertDetailsWithFilters();
-        // this.moveClearAlertsToBottom();
         this.loading = false;
       }
     })
