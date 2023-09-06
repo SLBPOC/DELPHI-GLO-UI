@@ -232,11 +232,10 @@
       <div class="align-center">
         <div class="select-filter">
           <div class="select-filter-header">
-            <div class="select-filter-title">Filter by111</div>
+            <div class="select-filter-title">Filter by</div>
             <button
               mat-icon-button
               class="calender-alrt-filter-close button-type-none"
-              (click)="RefreshGrid()"
             >
               <svg
                 width="16"
@@ -322,141 +321,147 @@
       </div>
     </mat-menu>
     <!-- select filter end -->
-
-    <table
-      matSort
-      mat-table
-      [dataSource]="dataSource"
-      (matSortChange)="onSortChanged($event)"
-    >
-      <!-- Priority Status Column -->
-      <ng-container matColumnDef="WellPriority">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-        <td mat-cell *matCellDef="let element">
-          <!-- <span class="high-priorityline">{{element?.status}}</span>  -->
-          <span
-            [ngClass]="
-              element.WellPriority === 'High'
-                ? 'high-priorityline'
-                : element.WellPriority === 'Medium'
-                ? 'med-priorityline'
-                : 'low-priorityline'
-            "
-          ></span>
-        </td>
-      </ng-container>
-      <!-- Wells Name -->
-      <ng-container matColumnDef="WellName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Well Name.</th>
-        <td mat-cell *matCellDef="let element" id="well_name">
-          <a [routerLink]="['/well-info']"> {{ element.WellName }}</a>
-          <!-- <a>{{ element.WellName }}</a> -->
-        </td>
-      </ng-container>
-      <!--Pump Status -->
-      <ng-container matColumnDef="TimeStamp">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.TimeStamp | date : "yyyy-MM-dd HH:MM:ss" }}
-        </td>
-      </ng-container>
-      <!-- Time and date -->
-      <ng-container matColumnDef="GLISetPoint">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>GLI SetPoint</th>
-        <td mat-cell *matCellDef="let element">{{ element.GLISetPoint }}</td>
-      </ng-container>
-
-      <!-- Structural Load -->
-      <ng-container
-        *ngFor="let eClumn of displayableExtraColumns"
-        [matColumnDef]="eClumn.header"
+    <div class="table-responsive">
+      <table
+        matSort
+        mat-table
+        [dataSource]="dataSource"
+        (matSortChange)="onSortChanged($event)"
       >
-        <th mat-sort-header mat-header-cell *matHeaderCellDef>
-          {{ eClumn.label }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <a class="button-type-none"
-            >{{ element[eClumn.accessor].value }}
+        <!-- Priority Status Column -->
+        <ng-container matColumnDef="WellPriority">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+          <td mat-cell *matCellDef="let element">
+            <!-- <span class="high-priorityline">{{element?.status}}</span>  -->
             <span
-              *ngIf="
-                eClumn.label === 'QLiq' ||
-                eClumn.label === 'QOil' ||
-                eClumn.label === 'Qg' ||
-                eClumn.label === 'Qw' ||
-                eClumn.label === 'Wc'
+              [ngClass]="
+                element.WellPriority === 'High'
+                  ? 'high-priorityline'
+                  : element.WellPriority === 'Medium'
+                  ? 'med-priorityline'
+                  : 'low-priorityline'
               "
-              >%</span
-            >
-          </a>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="QLiq">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>OLiq</th>
-        <td mat-cell *matCellDef="let element">{{ element.QLiq }}</td>
-      </ng-container>
-      <!-- Avg Last 24hrs -->
-      <ng-container matColumnDef="Qg">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>QG</th>
-        <td mat-cell *matCellDef="let element">{{ element.Qg }}</td>
-      </ng-container>
-      <!-- Inferred Production -->
-      <ng-container matColumnDef="QOil">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>QOil</th>
-        <td mat-cell *matCellDef="let element">{{ element.QOil }}</td>
-      </ng-container>
-      <!-- Avg Last 24hrs -->
-      <ng-container matColumnDef="Qw">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>QW</th>
-        <td mat-cell *matCellDef="let element">{{ element.Qw }}</td>
-      </ng-container>
-      <!-- Inferred Production -->
-      <ng-container matColumnDef="Wc">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>WC</th>
-        <td mat-cell *matCellDef="let element">{{ element.Wc }}</td>
-      </ng-container>
-      <!-- Pump Fillage -->
-      <ng-container matColumnDef="CompressorUpTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Compressor Uptime
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.CompressorUpTime }}
-        </td>
-      </ng-container>
+            ></span>
+          </td>
+        </ng-container>
+        <!-- Wells Name -->
+        <ng-container matColumnDef="WellName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Well Name.</th>
+          <td mat-cell *matCellDef="let element" id="well_name">
+            <a [routerLink]="['/well-info']"> {{ element.WellName }}</a>
+            <!-- <a>{{ element.WellName }}</a> -->
+          </td>
+        </ng-container>
+        <!--Pump Status -->
+        <ng-container matColumnDef="TimeStamp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.TimeStamp | date : "yyyy-MM-dd HH:MM:ss" }}
+          </td>
+        </ng-container>
+        <!-- Time and date -->
+        <ng-container matColumnDef="GLISetPoint">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            GLI SetPoint
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.GLISetPoint }}</td>
+        </ng-container>
 
-      <!-- Mode Operation -->
-      <ng-container matColumnDef="ProductionUpTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Production Uptime
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.ProductionUpTime }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="DeviceUpTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Uptime</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.DeviceUpTime }}
-        </td>
-      </ng-container>
-      <!-- Status Operation -->
-      <ng-container matColumnDef="CurrentGLISetpoint">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Current GLI Setpoint
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.CurrentGLISetpoint }}
-        </td>
-      </ng-container>
-      <!--Cycle Status-->
-      <ng-container matColumnDef="LastCycleStatus">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cycle Status</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.LastCycleStatus }}
-        </td>
-      </ng-container>
+        <!-- Structural Load -->
+        <ng-container
+          *ngFor="let eClumn of displayableExtraColumns"
+          [matColumnDef]="eClumn.header"
+        >
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>
+            {{ eClumn.label }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <a class="button-type-none"
+              >{{ element[eClumn.accessor].value }}
+              <span
+                *ngIf="
+                  eClumn.label === 'QLiq' ||
+                  eClumn.label === 'QOil' ||
+                  eClumn.label === 'Qg' ||
+                  eClumn.label === 'Qw' ||
+                  eClumn.label === 'Wc'
+                "
+                >%</span
+              >
+            </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="QLiq">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>OLiq</th>
+          <td mat-cell *matCellDef="let element">{{ element.QLiq }}</td>
+        </ng-container>
+        <!-- Avg Last 24hrs -->
+        <ng-container matColumnDef="Qg">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>QG</th>
+          <td mat-cell *matCellDef="let element">{{ element.Qg }}</td>
+        </ng-container>
+        <!-- Inferred Production -->
+        <ng-container matColumnDef="QOil">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>QOil</th>
+          <td mat-cell *matCellDef="let element">{{ element.QOil }}</td>
+        </ng-container>
+        <!-- Avg Last 24hrs -->
+        <ng-container matColumnDef="Qw">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>QW</th>
+          <td mat-cell *matCellDef="let element">{{ element.Qw }}</td>
+        </ng-container>
+        <!-- Inferred Production -->
+        <ng-container matColumnDef="Wc">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>WC</th>
+          <td mat-cell *matCellDef="let element">{{ element.Wc }}</td>
+        </ng-container>
+        <!-- Pump Fillage -->
+        <ng-container matColumnDef="CompressorUpTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Compressor Uptime
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.CompressorUpTime }}
+          </td>
+        </ng-container>
 
-      <!-- <ng-container matColumnDef="PreprocessorState">
+        <!-- Mode Operation -->
+        <ng-container matColumnDef="ProductionUpTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Production Uptime
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.ProductionUpTime }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="DeviceUpTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Device Uptime
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.DeviceUpTime }}
+          </td>
+        </ng-container>
+        <!-- Status Operation -->
+        <ng-container matColumnDef="CurrentGLISetpoint">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Current GLI Setpoint
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.CurrentGLISetpoint }}
+          </td>
+        </ng-container>
+        <!--Cycle Status-->
+        <ng-container matColumnDef="LastCycleStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Cycle Status
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.LastCycleStatus }}
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="PreprocessorState">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           PreprocessorState
         </th>
@@ -464,102 +469,107 @@
           {{ element.PreprocessorState }}
         </td>
       </ng-container> -->
-      <!--Auto/Manua-->
-      <ng-container matColumnDef="ApprovalStatus">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Approve/Discard/Override
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.ApprovalStatus }}
-        </td>
-      </ng-container>
-      <!--Approve/Discard/ Override-->
-      <ng-container matColumnDef="ApprovalMode">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Auto/Manual</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.ApprovalMode }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="CurrentCycleStatus">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          CurrentCycleStatus
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.CurrentCycleStatus }}
-        </td>
-      </ng-container>
+        <!--Auto/Manua-->
+        <ng-container matColumnDef="ApprovalStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Approve/Discard/Override
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.ApprovalStatus }}
+          </td>
+        </ng-container>
+        <!--Approve/Discard/ Override-->
+        <ng-container matColumnDef="ApprovalMode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Auto/Manual</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.ApprovalMode }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CurrentCycleStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            CurrentCycleStatus
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.CurrentCycleStatus }}
+          </td>
+        </ng-container>
 
-      <!-- No Of Alerts(%) -->
-      <ng-container matColumnDef="NoOfAlerts">
-        <th mat-sort-header mat-header-cell *matHeaderCellDef>No Of Alerts</th>
-        <td mat-cell *matCellDef="let element" class="align-col">
-          <a [routerLink]="['/alerts']"> {{ element.NoOfAlerts }}</a>
-        </td>
-      </ng-container>
+        <!-- No Of Alerts(%) -->
+        <ng-container matColumnDef="NoOfAlerts">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>
+            No Of Alerts
+          </th>
+          <td mat-cell *matCellDef="let element" class="align-col">
+            <a [routerLink]="['/alerts']"> {{ element.NoOfAlerts }}</a>
+          </td>
+        </ng-container>
 
-      <!-- Dynamic Columns -->
+        <!-- Dynamic Columns -->
 
-      <tr
-        *matNoDataRow
-        class="mat-mdc-row mdc-data-table__row cdk-row ng-star-inserted"
-      >
-        <td
-          class="mat-mdc-cell mdc-data-table__cell cdk-cell ng-star-inserted text-center"
-          *ngIf="loading == true"
-          [attr.colspan]="displayedColumns.length"
+        <tr
+          *matNoDataRow
+          class="mat-mdc-row mdc-data-table__row cdk-row ng-star-inserted"
         >
-          <mat-progress-spinner
-            mode="indeterminate"
-            class="table-progressbar"
-            style="margin: 0 auto"
-          ></mat-progress-spinner>
-        </td>
-        <td
-          class="mat-mdc-cell mdc-data-table__cell cdk-cell ng-star-inserted text-center"
-          *ngIf="loading == false"
-          [attr.colspan]="displayedColumns.length"
-        >
-          No Record Found
-        </td>
-      </tr>
-      <!-- Header -->
-      <!-- Header row well group -->
-      <ng-container matColumnDef="header-row-well-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">Well</th>
-      </ng-container>
+          <td
+            class="mat-mdc-cell mdc-data-table__cell cdk-cell ng-star-inserted text-center"
+            *ngIf="loading == true"
+            [attr.colspan]="displayedColumns.length"
+          >
+            <mat-progress-spinner
+              mode="indeterminate"
+              class="table-progressbar"
+              style="margin: 0 auto"
+            ></mat-progress-spinner>
+          </td>
+          <td
+            class="mat-mdc-cell mdc-data-table__cell cdk-cell ng-star-inserted text-center"
+            *ngIf="loading == false"
+            [attr.colspan]="displayedColumns.length"
+          >
+            No Record Found
+          </td>
+        </tr>
+        <!-- Header -->
+        <!-- Header row well group -->
+        <ng-container matColumnDef="header-row-well-group">
+          <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">Well</th>
+        </ng-container>
 
-      <!-- Header row last-cycle group -->
-      <ng-container matColumnDef="header-row-last-cycle-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">Last Cycle</th>
-      </ng-container>
+        <!-- Header row last-cycle group -->
+        <ng-container matColumnDef="header-row-last-cycle-group">
+          <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">
+            Last Cycle
+          </th>
+        </ng-container>
 
-      <!-- Header row second group -->
-      <ng-container matColumnDef="header-row-current-cycle-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
-          Current Cycle
-        </th>
-      </ng-container>
+        <!-- Header row second group -->
+        <ng-container matColumnDef="header-row-current-cycle-group">
+          <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+            Current Cycle
+          </th>
+        </ng-container>
 
-      <!-- Header row second group -->
-      <ng-container matColumnDef="header-row-mode-of-operation-group">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
-          Mode of Operation
-        </th>
-      </ng-container>
+        <!-- Header row second group -->
+        <ng-container matColumnDef="header-row-mode-of-operation-group">
+          <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+            Mode of Operation
+          </th>
+        </ng-container>
 
-      <tr
-        mat-header-row
-        *matHeaderRowDef="[
-          'header-row-well-group',
-          'header-row-last-cycle-group',
-          'header-row-current-cycle-group',
-          'header-row-mode-of-operation-group'
-        ]"
-      ></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="[
+            'header-row-well-group',
+            'header-row-last-cycle-group',
+            'header-row-current-cycle-group',
+            'header-row-mode-of-operation-group'
+          ]"
+        ></tr>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
     <mat-paginator
       #paginator
       [length]="TotalCount"
