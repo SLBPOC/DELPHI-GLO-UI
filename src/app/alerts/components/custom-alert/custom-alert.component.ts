@@ -147,17 +147,24 @@ export class CustomAlertComponent {
           this.clear();
       });
     }
-
-    editAlert(id:number)
+    
+    editAlert(Id:number)
     {
-      this.CustomAlertService.getDetails(id).subscribe((res)=>{          
-          this.dataSource = new MatTableDataSource<customAlert>(this.alertData);
-          this.isActive=res.isActive;
-          this.customAlertForm.controls.wellName.setValue(res.wellName);
-          this.customAlertForm.controls.CustomAlertName.setValue(res.customAlertName);
-          this.dataSource.paginator = this.paginator;
-        })
+      var GetRecord=this.alertData.filter(a=> a.id==Id)
+      if(GetRecord != null)
+      {
+        this.isActive=GetRecord[0].isActive;
+        this.customAlertForm.controls.CustomAlertName.setValue(GetRecord[0].customAlertName);
+        this.customAlertForm.controls.wellName.setValue(GetRecord[0].wellName);
+        this.customAlertForm.controls.NotificationType.setValue(GetRecord[0].notificationType);
+        this.customAlertForm.controls.NotificationType.setValue(GetRecord[0].notificationType);    
+        this.customAlertForm.controls.Priority.setValue(GetRecord[0].priority);
+        this.customAlertForm.controls.Category.setValue(GetRecord[0].category);
+        this.customAlertForm.controls.Operator.setValue(GetRecord[0].operator);
+        this.customAlertForm.controls.Value.setValue(GetRecord[0].value);     
+      }
     }
+    
     deleteAlert(id:number)
     {
       this.CustomAlertService.deleteCustomAlert(id).subscribe((res)=>{
