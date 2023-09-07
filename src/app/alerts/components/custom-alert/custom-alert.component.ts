@@ -7,6 +7,7 @@ import { ThemePalette } from '@angular/material/core';
 import { DateRange } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { WellListModel } from 'src/app/shared/models/well-list';
 @Component({
   selector: 'app-custom-alert',
   templateUrl: './custom-alert.component.html',
@@ -29,14 +30,15 @@ export class CustomAlertComponent {
   endDate:any;
   disableSelect:any;
   selected!: Date;
-  well:any[]=[{wellId:"W001",wellName:"Well1" },{wellId:"W002",wellName:"Well2"},{wellId:"W003",wellName:"Well3"},];
+  //well:any[]=[{wellId:"W001",wellName:"Well1" },{wellId:"W002",wellName:"Well2"},{wellId:"W003",wellName:"Well3"},];
   notification:any=['Text','Email'];
   priority:any=['High','Medium','Low'];
   category:any=['Fluid Pound Events','Current SPM','Current PF','Load'];
   operator:any=['=','<>','>','<'];
-  value:any=['Any numerical value','Max load','Min load'];
+  //value:any=['Any numerical value','Max load','Min load'];
   isActive:boolean=true;
   customAlerts: customAlert[]=[];
+  well!:WellListModel[];
   customAlert: customAlert=
       {
         id:0,
@@ -46,7 +48,7 @@ export class CustomAlertComponent {
         priority:"",
         category:"",
         operator:"",
-        value:"",
+        value:0,
         isActive:false,
         startDate:"",
         endDate:""
@@ -58,6 +60,7 @@ export class CustomAlertComponent {
     }
     ngOnInit() {
       this.getAlertDetails();
+      this.getWellDropdown();
     }
       public dateControl = new FormControl(new Date(2021,9,4,5,6,7));
       public dateControlMinMax = new FormControl(new Date());
@@ -69,7 +72,8 @@ export class CustomAlertComponent {
       Category: ['', [Validators.required]],
       Operator: ['', [Validators.required]],
       Value: ['', [Validators.required]],
-      IsActive: ['', [Validators.required]]      
+      IsActive: ['', [Validators.required]],
+      dateRange: ['', [Validators.required]]      
     });
 
     alertData!: customAlert[];
@@ -91,6 +95,15 @@ export class CustomAlertComponent {
       this.selectedRangeValueChange.emit(this.selectedRangeValue);
     }
     
+    getWellDropdown()
+    {
+      this.CustomAlertService.getWellName()
+        .subscribe((res)=>{
+          
+          this.well=res;
+          console.log(this.well);
+        })
+    }
     getAlertDetails(){
       this.CustomAlertService.displayDetails()
         .subscribe((res)=>{
@@ -161,7 +174,7 @@ export class CustomAlertComponent {
         this.customAlertForm.controls.Priority.setValue(GetRecord[0].priority);
         this.customAlertForm.controls.Category.setValue(GetRecord[0].category);
         this.customAlertForm.controls.Operator.setValue(GetRecord[0].operator);
-        this.customAlertForm.controls.Value.setValue(GetRecord[0].value);     
+        this.customAlertForm.controls.Value.setValue(GetRecord[0].value.toString());  
       }
     }
     
@@ -186,6 +199,7 @@ export class CustomAlertComponent {
       this.customAlertForm.get('Category')?.reset();
       this.customAlertForm.get('Operator')?.reset();
       this.customAlertForm.get('Value')?.reset();
+      this.selectedRangeValue = new DateRange<Date>(null, null);
     }
     cancel()
     {
