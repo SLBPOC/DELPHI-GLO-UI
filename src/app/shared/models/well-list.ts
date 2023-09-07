@@ -1,7 +1,7 @@
 export interface WellListModel {
   wellPriority: string;
   id: number;
-  WellName: string;
+  wellName: string;
   time_stamp: string;
   GLISetPoint: number;
   Qliq: number;
