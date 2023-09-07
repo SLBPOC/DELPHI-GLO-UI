@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SidenavComponent } from './shared/components/sidenav/sidenav.component';
+import { AlertListComponent } from './alerts/components/alert-list/alert-list.component';
 const routes: Routes = [
   // { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   // { path: 'well-list', loadChildren: () => import('./well-list/well-list.module').then(m => m.WellListModule) },
@@ -15,13 +16,35 @@ const routes: Routes = [
     path: '',
     component: SidenavComponent,
     children: [
-  { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
-  { path: '', redirectTo: '/alerts', pathMatch: 'full' },
-  { path: 'well-list', loadChildren: () => import('./well-list/well-list.module').then(m => m.WellListModule) },
-  { path: 'alerts', loadChildren: () => import('./alerts/alerts.module').then(m => m.AlertsModule) },
-  { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },  { path: 'reports', loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule) },
-    ]
-  }
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+      },
+      { path: '', redirectTo: '/alerts', pathMatch: 'full' },
+      { path: 'alerts/:WellName', component: AlertListComponent },
+      {
+        path: 'well-list',
+        loadChildren: () =>
+          import('./well-list/well-list.module').then((m) => m.WellListModule),
+      },
+      {
+        path: 'alerts',
+        loadChildren: () =>
+          import('./alerts/alerts.module').then((m) => m.AlertsModule),
+      },
+      {
+        path: 'events',
+        loadChildren: () =>
+          import('./events/events.module').then((m) => m.EventsModule),
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./reports/reports.module').then((m) => m.ReportsModule),
+      },
+    ],
+  },
 ];
 
 // const routes: Routes = [
@@ -51,7 +74,7 @@ const routes: Routes = [
 //         ],
 //       },
 //       { path: 'well-performance', component: WellPerformanceComponent },
-      
+
 //       {
 //         path: 'scatter-chart',
 //         component: ScatterChartComponent,
@@ -60,14 +83,14 @@ const routes: Routes = [
 //         path: 'bubble-chart',
 //         component: BubbleChartComponent,
 //       }
-      
+
 //   //   ],
 //   // },
-  
+
 // ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -526,7 +526,9 @@
               No Of Alerts
             </th>
             <td mat-cell *matCellDef="let element" class="align-col">
-              <a [routerLink]="['/alerts']"> {{ element.NoOfAlerts }}</a>
+              <a [routerLink]="['/alerts', element.WellName]">
+                {{ element.NoOfAlerts }}</a
+              >
             </td>
           </ng-container>
 

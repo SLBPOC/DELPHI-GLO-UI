@@ -1,4 +1,11 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { DateRange } from '@angular/material/datepicker';
@@ -8,7 +15,8 @@ import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
 import { MatDialog } from '@angular/material/dialog';
-import { fromEvent, map, debounceTime, distinctUntilChanged, tap } from 'rxjs'
+import { fromEvent, map, debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Option {
   id: string;
@@ -24,30 +32,35 @@ enum DateRanges {
 @Component({
   selector: 'app-alert-list',
   templateUrl: './alert-list.component.html',
-  styleUrls: ['./alert-list.component.scss']
+  styleUrls: ['./alert-list.component.scss'],
 })
-
 export class AlertListComponent {
   alertList!: AlertList[];
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
-  displayedColumns: string[] = ["stat", "WellName", "TimeandDate", "AlertDescription", "action"]
+  displayedColumns: string[] = [
+    'stat',
+    'WellName',
+    'TimeandDate',
+    'AlertDescription',
+    'action',
+  ];
   highCount = 0;
   medCount = 0;
   lowCount = 0;
   clearCount = 0;
   searchQueryInput: any;
   clearAlertsComments!: string;
-  searchString: string = "";
+  searchString: string = '';
 
-  sortDirection: string = "";
-  sortColumn: string = "";
+  sortDirection: string = '';
+  sortColumn: string = '';
   pageSize: number = 5;
   pageNumber = 1;
   skip = 0;
   currentPage = 0;
   model: any = [];
-  seachByStatus: string = "";
+  seachByStatus: string = '';
   loading = true;
   snoozeByTime: number = 1;
   showSnoozeDialog: boolean = false;
@@ -61,80 +74,111 @@ export class AlertListComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('searchQueryInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private service: AlertListService,public dialog: MatDialog) { }
+  constructor(
+    private service: AlertListService,
+    public dialog: MatDialog,
+    private router: Router,
+    private _route: ActivatedRoute
+  ) {}
 
   ngAfterViewInit() {
-    fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
-      map(event => event.target.value),
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(x => this.searchString = x)
-    ).subscribe(x => {
-      if (x != undefined && x.trim() != "") {
-        this.GetAlertDetailsWithFilters();
-      }
-    });
+    fromEvent<any>(this.searchInput.nativeElement, 'keyup')
+      .pipe(
+        map((event) => event.target.value),
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap((x) => (this.searchString = x))
+      )
+      .subscribe((x) => {
+        if (x != undefined && x.trim() != '') {
+          this.GetAlertDetailsWithFilters();
+        }
+      });
   }
 
   ngOnInit() {
     // this.setgridData();
+    this._route.params.subscribe((params) => {
+      this.searchString = params['WellName'];
+    });
     this.GetAlertDetailsWithFilters();
   }
 
   openDialog() {
     this.dialog.open(CustomAlertComponent);
   }
-  
+
   GetAlertDetailsWithFilters() {
     this.loading = true;
     this.model = [];
     var SearchModel = this.createModel();
-    this.service.getAlertDetailsWithFilters(SearchModel, this.pageNumber, this.pageSize, this.searchString).subscribe(response => {
-      if (response.status != 404) {
-        this.loading = false;
-        this.alertList = response.data;
-        this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-        this.getLegendCount();
-        this.moveClearAlertsToBottom();
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = response.totalCount;
-        });
+    this.service
+      .getAlertDetailsWithFilters(
+        SearchModel,
+        this.pageNumber,
+        this.pageSize,
+        this.searchString
+      )
+      .subscribe(
+        (response) => {
+          if (response.status != 404) {
+            this.loading = false;
+            this.alertList = response.data;
+            this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+            this.getLegendCount();
+            this.moveClearAlertsToBottom();
+            setTimeout(() => {
+              this.paginator.pageIndex = this.currentPage;
+              this.paginator.length = response.totalCount;
+            });
 
-        this.totalCount = response.totalCount;
-        this.paginator.pageIndex = this.currentPage;
-        this.paginator.length = response.totalCount;
-      }
-    },(err) => {
-      this.loading = false;
-      this.alertList = []
-      this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-    }
-    );
+            this.totalCount = response.totalCount;
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = response.totalCount;
+          }
+        },
+        (err) => {
+          this.loading = false;
+          this.alertList = [];
+          this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+        }
+      );
   }
 
-  GetAlertListWithDateFilters(startDate : any, endDate: any) {
+  GetAlertListWithDateFilters(startDate: any, endDate: any) {
     this.loading = true;
     this.model = [];
     var SearchModel = this.createModel();
-    this.service.getAlertDetailsWithFilters(SearchModel, this.pageNumber, this.pageSize, this.searchString, startDate, endDate).subscribe(response => {
-      if (response.status != 404) {
-        this.loading = false;
-        this.alertList = response.data;
-        this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-        this.getLegendCount();
-        this.moveClearAlertsToBottom();
-        setTimeout(() => {
-          this.totalCount = response.totalCount;
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = response.totalCount;
-        });
-      }
-    },(err) => {
-      this.loading = false;
-      this.alertList = []
-      this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
-    });
+    this.service
+      .getAlertDetailsWithFilters(
+        SearchModel,
+        this.pageNumber,
+        this.pageSize,
+        this.searchString,
+        startDate,
+        endDate
+      )
+      .subscribe(
+        (response) => {
+          if (response.status != 404) {
+            this.loading = false;
+            this.alertList = response.data;
+            this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+            this.getLegendCount();
+            this.moveClearAlertsToBottom();
+            setTimeout(() => {
+              this.totalCount = response.totalCount;
+              this.paginator.pageIndex = this.currentPage;
+              this.paginator.length = response.totalCount;
+            });
+          }
+        },
+        (err) => {
+          this.loading = false;
+          this.alertList = [];
+          this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
+        }
+      );
   }
 
   //Create Model for search
@@ -142,10 +186,10 @@ export class AlertListComponent {
     this.pageNumber = this.pageNumber;
     this.pageSize = this.pageSize;
     let obj = {
-      "field": this.sortColumn ? this.sortColumn : "",
-      "dir": this.sortDirection ? this.sortDirection : ""
-    }
-    this.searchString = this.searchString ? this.searchString : "";
+      field: this.sortColumn ? this.sortColumn : '',
+      dir: this.sortDirection ? this.sortDirection : '',
+    };
+    this.searchString = this.searchString ? this.searchString : '';
     this.model.push(obj);
     return this.model;
   }
@@ -158,7 +202,7 @@ export class AlertListComponent {
       this.getLegendCount();
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    })
+    });
   }
 
   pageChanged(event: PageEvent) {
@@ -172,55 +216,62 @@ export class AlertListComponent {
     this.pageNumber = this.pageNumber;
     this.pageSize = this.pageSize;
     this.sortDirection = this.sort.direction;
-    this.sortColumn = (typeof this.sort.active !== "undefined") ? this.sort.active : "";
+    this.sortColumn =
+      typeof this.sort.active !== 'undefined' ? this.sort.active : '';
     this.GetAlertDetailsWithFilters();
   }
 
   clearSearch() {
     this.pageNumber = 1;
-    this.seachByStatus = "";
-    this.searchString = "";
+    this.seachByStatus = '';
+    this.searchString = '';
     this.GetAlertDetailsWithFilters();
   }
 
   refresh() {
     this.pageNumber = this.pageNumber;
-    this.seachByStatus = "";
-    this.searchString = "";
+    this.seachByStatus = '';
+    this.searchString = '';
     this.GetAlertDetailsWithFilters();
     // this.checkSnoozedAlerts();
   }
 
   snoozeBy(snoozeTime: any, snoozeByTime: any) {
-    this.service.getSnoozedAlerts(snoozeTime.Id, snoozeByTime).subscribe((data: any) => {
-      console.log('snooze by response', data);
-      this.GetAlertDetailsWithFilters();
-    })
+    this.service
+      .getSnoozedAlerts(snoozeTime.Id, snoozeByTime)
+      .subscribe((data: any) => {
+        console.log('snooze by response', data);
+        this.GetAlertDetailsWithFilters();
+      });
   }
 
   closeSnoozeDialog(snoozeDialog: any) {
     snoozeDialog.close.emit();
   }
 
-  moveClearAlertsToBottom(){
+  moveClearAlertsToBottom() {
     let clearedList: AlertList[];
-    clearedList = this.alertList.filter((alert) => alert.AlertLevel === 'Cleared')
-    this.alertList = this.alertList.filter((alert) => alert.AlertLevel !== 'Cleared')
+    clearedList = this.alertList.filter(
+      (alert) => alert.AlertLevel === 'Cleared'
+    );
+    this.alertList = this.alertList.filter(
+      (alert) => alert.AlertLevel !== 'Cleared'
+    );
     clearedList.forEach((item) => {
-      this.alertList.push(item)
-    })
+      this.alertList.push(item);
+    });
     this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
   }
 
   clearAlerts(alert: any, comment: string) {
     this.loading = true;
     this.service.clearAlerts(alert.Id, comment).subscribe((data: any) => {
-      this.clearAlertsComments = "";
+      this.clearAlertsComments = '';
       if (data.success == true) {
         this.GetAlertDetailsWithFilters();
         this.loading = false;
       }
-    })
+    });
   }
 
   closeClearAlertDialog(alertDialog: any) {
@@ -230,16 +281,16 @@ export class AlertListComponent {
   // UI functionality
 
   getLegendCount() {
-    let high = this.alertList.filter(alert => alert.AlertLevel == "High");
+    let high = this.alertList.filter((alert) => alert.AlertLevel == 'High');
     this.highCount = high.length;
 
-    let med = this.alertList.filter(alert => alert.AlertLevel == "Medium");
+    let med = this.alertList.filter((alert) => alert.AlertLevel == 'Medium');
     this.medCount = med.length;
 
-    let low = this.alertList.filter(alert => alert.AlertLevel == "Low");
+    let low = this.alertList.filter((alert) => alert.AlertLevel == 'Low');
     this.lowCount = low.length;
 
-    let clear = this.alertList.filter(alert => alert.AlertLevel == "Cleared");
+    let clear = this.alertList.filter((alert) => alert.AlertLevel == 'Cleared');
     this.clearCount = clear.length;
   }
 
@@ -247,19 +298,27 @@ export class AlertListComponent {
     let priorityList: AlertList[];
     switch (priority) {
       case 'High':
-        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'High')
+        priorityList = this.alertList.filter(
+          (alert) => alert.AlertLevel === 'High'
+        );
         this.dataSource = new MatTableDataSource<AlertList>(priorityList);
         break;
       case 'Medium':
-        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Medium')
+        priorityList = this.alertList.filter(
+          (alert) => alert.AlertLevel === 'Medium'
+        );
         this.dataSource = new MatTableDataSource<AlertList>(priorityList);
         break;
       case 'Low':
-        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Low')
+        priorityList = this.alertList.filter(
+          (alert) => alert.AlertLevel === 'Low'
+        );
         this.dataSource = new MatTableDataSource<AlertList>(priorityList);
         break;
       case 'Cleared':
-        priorityList = this.alertList.filter((alert) => alert.AlertLevel === 'Cleared')
+        priorityList = this.alertList.filter(
+          (alert) => alert.AlertLevel === 'Cleared'
+        );
         this.dataSource = new MatTableDataSource<AlertList>(priorityList);
         break;
     }
@@ -268,8 +327,8 @@ export class AlertListComponent {
   resetDateFilters() {
     // this.dataSource.filter = '';
     this.pageNumber = this.pageNumber;
-    this.seachByStatus = "";
-    this.searchString = "";
+    this.seachByStatus = '';
+    this.searchString = '';
     let todaysDate = new Date();
     this.selectedRangeValue = new DateRange<Date>(todaysDate, null);
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
@@ -279,30 +338,46 @@ export class AlertListComponent {
     this.resetDateFilters();
     switch (option) {
       case DateRanges.DAY:
-        let today = (new Date()).toISOString();
+        let today = new Date().toISOString();
         let d = new Date();
         let tomorrow = new Date();
         tomorrow.setDate(d.getDate() + 1);
         let tomorrowStr = tomorrow.toISOString();
-        this.GetAlertListWithDateFilters(today.substring(0,10), tomorrowStr.substring(0,10));
+        this.GetAlertListWithDateFilters(
+          today.substring(0, 10),
+          tomorrowStr.substring(0, 10)
+        );
         break;
 
       case DateRanges.WEEK:
         let curr = new Date(); // get current date
         let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
         let last = first + 6; // last day is the first day + 6
-        let firstday = (new Date(curr.setDate(first))).toISOString();
-        let lastday = (new Date(curr.setDate(last))).toISOString();
-        this.GetAlertListWithDateFilters(firstday.substring(0,10), lastday.substring(0,10));
+        let firstday = new Date(curr.setDate(first)).toISOString();
+        let lastday = new Date(curr.setDate(last)).toISOString();
+        this.GetAlertListWithDateFilters(
+          firstday.substring(0, 10),
+          lastday.substring(0, 10)
+        );
         break;
 
       case DateRanges.MONTH:
         let date = new Date();
-        let firstDay = (new Date(date.getFullYear(), date.getMonth(), 1)).toISOString();
-        let lastDay = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).toISOString();
-        this.GetAlertListWithDateFilters(firstDay.substring(0,10), lastDay.substring(0,10));
+        let firstDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          1
+        ).toISOString();
+        let lastDay = new Date(
+          date.getFullYear(),
+          date.getMonth() + 1,
+          0
+        ).toISOString();
+        this.GetAlertListWithDateFilters(
+          firstDay.substring(0, 10),
+          lastDay.substring(0, 10)
+        );
     }
-
   }
 
   resetDateRangeFilters() {
@@ -313,21 +388,31 @@ export class AlertListComponent {
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
 
-  getSelectedMonth(month: any){
+  getSelectedMonth(month: any) {
     let m = month + 1;
-    return m.toString().padStart(2,'0');
+    return m.toString().padStart(2, '0');
   }
 
-  getSelectedDay(day: any){
-    return day.toString().padStart(2,'0');
+  getSelectedDay(day: any) {
+    return day.toString().padStart(2, '0');
   }
 
   applyDateRangeFilter() {
     let fromDate = this.selectedRangeValue.start;
     let toDate = this.selectedRangeValue.end;
-    let startDate = fromDate?.getFullYear() + '-' + this.getSelectedMonth(fromDate?.getMonth()) + '-' + this.getSelectedDay(fromDate?.getDate());
-    let endDate = toDate?.getFullYear() + '-' + this.getSelectedMonth(toDate?.getMonth()) + '-' + this.getSelectedDay(toDate?.getDate());
-    this.GetAlertListWithDateFilters(startDate,endDate);
+    let startDate =
+      fromDate?.getFullYear() +
+      '-' +
+      this.getSelectedMonth(fromDate?.getMonth()) +
+      '-' +
+      this.getSelectedDay(fromDate?.getDate());
+    let endDate =
+      toDate?.getFullYear() +
+      '-' +
+      this.getSelectedMonth(toDate?.getMonth()) +
+      '-' +
+      this.getSelectedDay(toDate?.getDate());
+    this.GetAlertListWithDateFilters(startDate, endDate);
   }
 
   selectedChange(m: any) {
@@ -344,5 +429,4 @@ export class AlertListComponent {
     }
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
-
 }
