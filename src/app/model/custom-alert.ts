@@ -7,7 +7,7 @@ export class customAlert {
     priority!:string;
     category!:string;
     operator!:string;
-    value!:string;
+    value!:number;
     isActive!:boolean;
     startDate!:string;
     endDate!:string;

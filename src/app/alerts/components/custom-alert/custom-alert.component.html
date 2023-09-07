@@ -49,10 +49,11 @@
                         </mat-form-field>
                         <div class="select-lbl">Select Value</div>
                         <mat-form-field appearance="outline">
-                            <mat-select placeholder="Select Value" formControlName="Value">
+                            <!-- <mat-select placeholder="Select Value" formControlName="Value">
                                 <mat-option *ngFor="let items of value" [value]="items">{{ items }}
                                 </mat-option>
-                            </mat-select>
+                            </mat-select> -->
+                            <input matInput placeholder="Enter Value" formControlName="Value">
                         </mat-form-field>
                     </div>
                 </div>
