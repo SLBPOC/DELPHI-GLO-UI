@@ -143,7 +143,7 @@ export class WellListComponent {
   constructor(
     private _formBuilder: FormBuilder,
     private service: WellListService,
-    private router: Router
+    public router: Router
   ) {}
   toppings = this._formBuilder.group({
     EffectiveRunTime: false,
@@ -209,7 +209,7 @@ export class WellListComponent {
     // this.model.pageSize = this.pageSize;
     // this.model.pageNumber = this.pageNumber;
     // this.model.status = this.status ? this.status : '';
-    // this.model.searchString = this.searchString ? this.searchString : '';
+    this.searchString = this.searchString ? this.searchString : '';
     // this.model.skip = this.skip ? this.skip : 0;
     let obj = {
       dir: this.sortDirection ? this.sortDirection : '',
@@ -282,9 +282,9 @@ export class WellListComponent {
 
   search(data: Event) {
     const val = (data.target as HTMLInputElement).value;
-    this.searchString = val;
+    this.dataSource.filter = val;
   }
-  ClearSearch() {
+  clearSearch() {
     this.searchString = '';
     this.pageIndex;
     this.pageSize;
