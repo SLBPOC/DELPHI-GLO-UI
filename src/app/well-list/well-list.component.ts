@@ -35,7 +35,7 @@ enum DateRanges {
 export class WellListComponent {
   displayedColumns: string[] = [
     'WellPriority',
-    'WellName',
+    'wellName',
     'TimeStamp',
     'GLISetPoint',
     'CompressorUpTime',
@@ -138,6 +138,7 @@ export class WellListComponent {
   status = this.seachByStatus;
   CycleStatus: string = '';
   ApprovalMode: string = '';
+  ApprovalStatus: string = '';
   wellPriority: string = '';
   constructor(
     private _formBuilder: FormBuilder,
@@ -167,11 +168,15 @@ export class WellListComponent {
 
     let sortExpression = this.createModel();
     // this.createModel();
+    console.log(this.ApprovalStatus);
+    console.log(this.ApprovalMode);
     this.service
       .getWellDetailsWithFilters(
         this.pageIndex,
         this.pageSize,
         this.searchString,
+        this.ApprovalStatus,
+        this.ApprovalMode,
         sortExpression
       )
       .subscribe((response) => {
@@ -191,8 +196,8 @@ export class WellListComponent {
           this.High = response.totalWellPriorityHigh;
           this.Medium = response.totalWellPriorityMedium;
           this.Low = response.totalWellPriorityLow;
-          this.cycleStatus = response.cycleStatus;
-          this.ApprovalMode = response.ApprovalMode;
+          // this.ApprovalStatus = response.ApprovalStatus;
+          // this.ApprovalMode = response.ApprovalMode;
         }
       });
   }
@@ -246,17 +251,19 @@ export class WellListComponent {
   }
   SeachByStatus(status: string) {
     this.searchString = status;
+    console.log('SeachByStatus');
+    console.log(this.searchString);
     this.pageNumber = 1;
     this.setGridData();
   }
   ApplyByFilter(value: string) {
-    this.searchString = value;
-    // this.pageNumber = 1;
+    this.ApprovalMode = value;
+    console.log('ApplyByFilter');
+
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
-    this.searchString = value;
-    // this.pageNumber = 1;
+    this.ApprovalStatus = value;
     this.setGridData();
   }
   getLegendCount() {
@@ -275,12 +282,14 @@ export class WellListComponent {
 
   search(data: Event) {
     const val = (data.target as HTMLInputElement).value;
-    this.dataSource.filter = val;
+    this.searchString = val;
   }
   ClearSearch() {
     this.searchString = '';
     this.pageIndex;
     this.pageSize;
+    this.ApprovalMode = '';
+    this.ApprovalStatus = '';
     this.sortExpression;
     this.setGridData();
   }
@@ -289,6 +298,8 @@ export class WellListComponent {
     this.searchString = '';
     this.pageIndex;
     this.pageSize;
+    this.ApprovalMode = '';
+    this.ApprovalStatus = '';
     this.sortExpression;
     this.setGridData();
   }
