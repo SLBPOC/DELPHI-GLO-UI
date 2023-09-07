@@ -379,8 +379,7 @@ debugger;
     // const filterValue = (event.target as HTMLInputElement).value;
     // this.dataSource.filter = filterValue.trim().toLowerCase();
     
-    this.type = "";
-    this.status = "";
+
     this.clearParams(['eventType', 'status']);
     // if (this.dataSource.paginator) {
     //   this.dataSource.paginator.firstPage();
