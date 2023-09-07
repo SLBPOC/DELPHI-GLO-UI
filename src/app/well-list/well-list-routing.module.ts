@@ -21,15 +21,7 @@ const routes: Routes = [
   {
     path: 'well-info',
     component: WellInfoComponent,
-  },
-  {
-    path: 'well-detail-view',
-    component: WellDetailViewComponent,
-  },
-  // {
-  //   path: 'well-list/well-view-tabs',
-  //   component: WellViewTabsComponent,
-  // },
+  }
 ];
 
 @NgModule({

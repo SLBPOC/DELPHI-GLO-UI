@@ -142,7 +142,7 @@ export class WellListComponent {
   constructor(
     private _formBuilder: FormBuilder,
     private service: WellListService,
-    private router: Router
+    public router: Router
   ) {}
   toppings = this._formBuilder.group({
     EffectiveRunTime: false,

@@ -1,0 +1,305 @@
+.position-relative {
+    position: relative;
+
+    .mat-mdc-tab-body-wrapper {
+        background: #171a2e;
+        box-shadow: none;
+    }
+
+    .innertab-rightcont {
+        position: absolute;
+        right: 12px;
+        top: -12px;
+        z-index: 1000;
+
+        ul {
+            padding: 0px;
+            margin: 0px;
+            display: flex;
+
+            li {
+                display: flex;
+                vertical-align: middle;
+                padding-right: 15px;
+
+                .action-btn {
+                    font-size: 12px;
+                    color: #fff;
+                    padding: 6px 16px;
+                    border-radius: 40px;
+                }
+
+                .active {
+                    background-color: #6BA7FF;
+                    border: 1px solid #6BA7FF;
+                    color: #080912;
+                }
+
+                .approve {
+                    background-color: rgba(66, 213, 190, 1);
+                    border: 1px solid rgba(66, 213, 190, 1);
+                    color: #080912;
+                }
+
+                .discard {
+                    background-color: rgba(255, 107, 107, 1);
+                    border: 1px solid rgba(255, 107, 107, 1);
+                    color: #080912;
+                }
+            }
+        }
+    }
+
+    .padding0 {
+        padding: 0px;
+    }
+
+    .col-md-12 {
+        display: flex;
+
+        .col-md-6 {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+    .table-right-sec {
+        text-align: right;
+
+        .top-icons {
+            ul {
+                margin: 0px;
+
+                li {
+                    display: inline-block;
+                    padding-right: 10px;
+                    vertical-align: middle;
+
+
+
+                    ::ng-deep {
+                        .mat-datepicker-toggle {
+                            button.mat-mdc-icon-button {
+                                /* background: red; */
+                                background-image: url(../../../../assets/images/calendar-icon.svg);
+                                background-repeat: no-repeat;
+                                background-position: 25px 14px;
+                                padding: 0px;
+
+
+                                svg {
+                                    display: none;
+                                }
+                            }
+                        }
+
+                        .daterange {
+                            .mat-mdc-form-field-flex {
+                                height: 25px;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    .panel-section {
+        border: 1px solid rgba(108, 113, 145, 1);
+        border-radius: 8px;
+        padding: 0px 10px;
+        width: 100%;
+        background: #171a2e;
+
+        p {
+            text-align: center;
+            color: var(--white);
+            padding: 20% 20%;
+        }
+
+        .panel-header {
+            font-size: 18px;
+            color: rgba(235, 236, 242, 1);
+            font-family: var(----font-Slb-San-bold);
+            font-weight: 700;
+            padding: 32px 20px;
+        }
+
+        .border-top {
+            border-top: 1px solid rgba(108, 113, 145, 1);
+            margin: 0px -15px;
+            display: block;
+        }
+
+
+
+        .pridiction-table {
+            padding: 0px;
+            margin: 0px;
+            border: none;
+
+            td.glsetpoint {
+                width: auto !important;
+            }
+
+            .mat-mdc-row {
+                td:nth-child(2) {
+                    width: 20%;
+                }
+            }
+
+            .tableContainer {
+                .mdc-data-table__cell {
+                    box-sizing: border-box;
+                    overflow: hidden;
+                    text-align: left;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+
+                }
+
+                ::ng-deep {
+                    .mat-mdc-header-row th:first-child {
+                        width: 32% !important;
+                    }
+
+
+
+                    .mdc-data-table__header-cell {
+                        padding: 5px 5px !important;
+                    }
+
+
+
+                }
+
+
+
+            }
+        }
+
+        .example-container {
+            height: 400px;
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        ::ng-deep {
+            input {
+                background: transparent !important;
+                color: #fff;
+                box-shadow: none;
+                border-bottom: 1px solid rgba(108, 113, 145, 1);
+                border-left: none;
+                border-top: none;
+                border-right: none;
+                padding: 10px 5px;
+                width: 70%;
+            }
+        }
+
+        .right-top-panel {
+            border-bottom: 1px solid rgba(139, 144, 173, 0.5);
+
+            ul {
+                list-style: none;
+                padding: 0px;
+                margin: 0;
+
+                li {
+                    display: inline-block;
+                    padding: 10px 15px 10px 0px;
+                }
+            }
+        }
+
+        .right-body-panel {
+            margin: 35% auto;
+            text-align: center;
+
+            .action-btn {
+                font-size: 12px;
+                color: #fff;
+                padding: 6px 16px;
+                border-radius: 40px;
+            }
+
+            .active {
+                background-color: #6BA7FF;
+                border: 1px solid #6BA7FF;
+                color: #080912;
+            }
+        }
+    }
+
+    .margintop {
+        margin-top: 20px;
+    }
+
+    .margin-top12 {
+        margin-top: 12px;
+    }
+
+    ::ng-deep {
+        .mat-mdc-tab-body-wrapper {
+            box-shadow: none !important;
+            background: #22263d !important;
+        }
+    }
+}
+
+
+
+.action-bottom-section {
+    ul {
+        padding: 0px 20px;
+
+        li {
+            display: inline-block;
+            font-size: 16px;
+            color: #6C7191;
+            font-weight: 500;
+            padding-right: 20px;
+            line-height: 45px;
+
+            .button-type-none {
+                margin-left: 5px;
+            }
+
+            .pinkbtn {
+                width: auto;
+                border: 1px solid #FF6B6B;
+                background-color: rgba(255, 107, 107, 15%);
+                font-size: 12px;
+                border-radius: 5px;
+                color: #fff;
+                padding: 4px 8px;
+
+            }
+
+            .greenbtn {
+                width: auto;
+                border: 1px solid #87EA2D;
+                background-color: rgba(135, 234, 45, 15%);
+                font-size: 12px;
+                border-radius: 2px;
+                color: #fff;
+                padding: 4px 8px;
+            }
+
+            .bluebtn {
+                width: auto;
+                border: 1px solid #70B5FF;
+                background-color: rgba(112, 181, 255, 15%);
+
+                font-size: 12px;
+                border-radius: 2px;
+                color: #fff;
+                padding: 4px 8px;
+            }
+
+        }
+    }
+}
