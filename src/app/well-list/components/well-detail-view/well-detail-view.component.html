@@ -1,0 +1,150 @@
+<div class="generic-tab position-relative">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+        <!-- label="Pump Cycles" -->
+        <mat-tab> 
+            <div class="col-md-12 padding0 margintop">
+                <div class="col-md-6">
+                    <div class="panel-section ">
+                        <div class="mat-mdc-tab-body-wrapper-block">
+                            <p>Swimlane Graph will be displayed here</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel-section dis-block">
+
+                        <div class="pridiction-table tableContainer  example-container mat-elevation-z8">
+                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                <!-- Timestamp -->
+                                <ng-container matColumnDef="gl_setpoint">
+                                    <th mat-header-cell *matHeaderCellDef> GL Injection Setpoint (MScf/d)</th>
+                                    <td mat-cell *matCellDef="let element" id="gl_setpoint" class="glsetpoint">
+                                        {{element.gl_setpoint}}
+                                    </td>
+                                </ng-container>
+                                <!-- Classification -->
+                                <ng-container matColumnDef="qi_units">
+                                    <th mat-header-cell *matHeaderCellDef> QI (STB/d)</th>
+                                    <td mat-cell *matCellDef="let element" id="qi_units">
+                                        <input type="text" value={{element.qi_units}}>
+                                    </td>
+                                </ng-container>
+                                <!--Confidence -->
+                                <ng-container matColumnDef="qw_units">
+                                    <th mat-header-cell *matHeaderCellDef>QO (STB/d)</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.qw_units}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="wc_units">
+                                    <th mat-header-cell *matHeaderCellDef>WC (%)</th>
+                                    <td mat-cell *matCellDef="let element"> {{element.wc_units}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"> </tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel-section margintop">
+                        <div class="action-bottom-section">
+                            <ul>
+                                <li>Well status <button class="button-type-none pinkbtn">Inactive</button></li>
+                                <li>Production<button class="button-type-none greenbtn">True</button></li>
+                                <li>Gas Lift <button class="button-type-none pinkbtn">True</button></li>
+                                <li>Computed Setpoint <button class="button-type-none bluebtn">2</button></li>
+                                <li>
+                                    Computed Setpoint <button class="button-type-none bluebtn">Cycle was reset due to
+                                        invalid data</button></li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="col-md-12 padding0 margintop">
+                <div class="col-md-6">
+                    <div class="panel-section ">
+                        <div class="mat-mdc-tab-body-wrapper-block">
+                            <p>Line Graph will be displayed here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </mat-tab>
+        <!-- <mat-tab label="Remote Control">
+            Coming soon
+        </mat-tab> -->
+    </mat-tab-group>
+    <div class="innertab-rightcont">
+        <div class="top-right-button">
+            <div class="table-right-sec">
+                <div class="top-icons">
+                    <ul>
+
+                        <li>
+                            <div class="form-field-sec-section daterange">
+                                <div class="input-lbl">&nbsp;</div>
+                                <button mat-icon-button class="button-type-none margin-top12"><svg
+                                        _ngcontent-ng-c281291517="" width="20" height="20" viewBox="0 0 20 20"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path _ngcontent-ng-c281291517="" fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M17.0527 2.93254C15.208 1.10189 12.6943 0 10.0005 0C4.48633 0 0 4.46343 0 9.95004C0 15.4362 4.48633 19.9001 10.0005 19.9001C15.5146 19.9001 20 15.4362 20 9.95004H18.5C18.5 14.6132 14.6875 18.4076 10.0005 18.4076C5.31348 18.4076 1.5 14.6132 1.5 9.95004C1.5 5.28645 5.31348 1.49251 10.0005 1.49251C12.29 1.49251 14.4268 2.42921 15.9951 3.98488L13 6.96503H18.2188H20V5.319V0L17.0527 2.93254Z"
+                                            fill="white"></path>
+                                    </svg></button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-field-sec-section daterange">
+                                <div class="input-lbl">&nbsp;</div>
+                                <button mat-icon-button class="button-type-none margin-top12"><svg width="20"
+                                        height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M18.5 1.49951H1.5V11.104H5.13184V12.6021H0V0H20V12.6021H14.8691V11.104H18.5V1.49951ZM10.7515 3.63086V15.0024H15.002L10.002 20.0005L5.00195 15.0024H9.25244V3.63086H10.7515Z"
+                                            fill="#EBECF2" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-field-sec-section daterange">
+                                <div class="input-lbl">&nbsp;</div>
+                                <button mat-icon-button class="button-type-none margin-top12">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M16 3.92109L12.0711 0L9.80391 2.26445L0 12.0492L0.00117184 16L3.90078 15.9984L12.9508 6.96523L12.9523 6.96602L16 3.92109ZM14.3156 3.92188L12.9539 5.28359L10.7078 3.0418L12.0711 1.68086L14.3156 3.92188ZM3.41016 14.8063L1.2332 12.4992L9.86484 3.88555L12.1086 6.125L3.41016 14.8063Z"
+                                            fill="white" />
+                                    </svg>
+
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-field-sec-section daterange">
+                                <div class="input-lbl">Select Range</div>
+                                <mat-form-field class="">
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input matStartDate placeholder="Start date">
+                                        <input matEndDate placeholder="End date">
+                                    </mat-date-range-input>
+                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"><svg width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M0 8.97559C1.91602 5.33301 5.78711 3 10.002 3C14.1895 3 18.084 5.33398 20 8.96289L18.8125 9.80566L18.7402 9.84082C17.123 6.59766 13.6934 4.50098 10.002 4.50098C6.2832 4.50098 2.87695 6.60742 1.26172 9.87305L0 8.97559ZM9.99023 6.4707C6.87695 6.4707 4.02148 8.13574 2.49414 10.748L3.74219 11.6357C4.97656 9.40234 7.37305 7.97168 9.99023 7.97168C12.5957 7.97168 15.0098 9.40527 16.2402 11.6338L17.4883 10.748C15.9609 8.14062 13.0879 6.4707 9.99023 6.4707ZM5.13672 12.627C6.24609 11.1211 8.03906 10.1836 9.97852 10.1836C11.9121 10.1836 13.7227 11.125 14.832 12.6357L13.5918 13.5166C12.7695 12.3887 11.4199 11.6846 9.97852 11.6846C8.53516 11.6846 7.19922 12.3848 6.37695 13.5078L5.13672 12.627ZM7.65039 15.748C7.65039 14.5068 8.68555 13.4961 9.95508 13.4961C11.2246 13.4961 12.2598 14.5068 12.2598 15.748C12.2598 16.9893 11.2246 18 9.95508 18C8.68555 18 7.65039 16.9893 7.65039 15.748ZM9.1875 15.748C9.1875 16.1621 9.5332 16.499 9.95508 16.499C10.3789 16.499 10.7227 16.1621 10.7227 15.748C10.7227 15.335 10.3789 14.998 9.95508 14.998C9.5332 14.998 9.1875 15.335 9.1875 15.748Z"
+                                                fill="#ADB1C7" />
+                                        </svg></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
