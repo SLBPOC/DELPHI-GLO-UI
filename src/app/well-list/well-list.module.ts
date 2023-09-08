@@ -11,6 +11,8 @@ import { AlgoLineChartComponent } from './components/algorithms-and-mitigation/c
 import { WellInfoComponent } from './components/well-info/well-info.component';
 import { WellDetailViewComponent } from './components/well-detail-view/well-detail-view.component';
 import { WellViewTabsComponent } from './components/well-view-tabs/well-view-tabs.component';
+import { WellviewAlertComponent } from './components/wellview-alert/wellview-alert.component';
+import { WellviewEventlogComponent } from './components/wellview-eventlog/wellview-eventlog.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { WellViewTabsComponent } from './components/well-view-tabs/well-view-tab
     AlgoLineChartComponent,
     WellDetailViewComponent,
     WellViewTabsComponent,
+    WellviewAlertComponent,
+    WellviewEventlogComponent,
   ],
   imports: [CommonModule, WellListRoutingModule, SharedModule],
 })

@@ -29,6 +29,7 @@ import { EventList } from 'src/app/shared/models/event-list';
 import { debounceTime, distinctUntilChanged, fromEvent, map, tap } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 
+
 interface Food {
   value: string;
   viewValue: string;
@@ -56,12 +57,11 @@ enum DateRanges {
 }
 
 @Component({
-  selector: 'app-events-list',
-  templateUrl: './events-list.component.html',
-  styleUrls: ['./events-list.component.scss'],
+  selector: 'app-wellview-eventlog',
+  templateUrl: './wellview-eventlog.component.html',
+  styleUrls: ['./wellview-eventlog.component.scss']
 })
-export class EventsListComponent implements AfterViewInit 
-{
+export class WellviewEventlogComponent {
   eventList!: EventList[];
   totalCount: number = 0;
   daysSelected: any[] = [];
@@ -73,7 +73,7 @@ export class EventsListComponent implements AfterViewInit
   seachByStatus: string = "";
   sortDirection: string = "";
   sortColumn: string = "";
-  pageSize: number = 10;
+  pageSize: number = 5;
   pageNumber: number = 1;
   pageIndex: number = 1;
   skip = 0;

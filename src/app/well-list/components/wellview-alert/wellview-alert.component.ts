@@ -6,7 +6,7 @@ import { AlertListService } from '../../../shared/services/alert-list.service';
 import { AlertList } from '../../../shared/models/alert-list';
 import { MatSort } from '@angular/material/sort';
 import { FormGroup, FormControl } from '@angular/forms';
-import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
+//import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, map, debounceTime, distinctUntilChanged, tap } from 'rxjs'
 
@@ -21,14 +21,13 @@ enum DateRanges {
   MONTH = 3,
 }
 
-@Component({
-  selector: 'app-alert-list',
-  templateUrl: './alert-list.component.html',
-  styleUrls: ['./alert-list.component.scss']
-})
 
-export class AlertListComponent 
-{
+@Component({
+  selector: 'app-wellview-alert',
+  templateUrl: './wellview-alert.component.html',
+  styleUrls: ['./wellview-alert.component.scss']
+})
+export class WellviewAlertComponent {
   alertList!: AlertList[];
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
@@ -82,10 +81,10 @@ export class AlertListComponent
     this.GetAlertDetailsWithFilters();
   }
 
-  openDialog() {
+  /* openDialog() {
     this.dialog.open(CustomAlertComponent);
   }
-  
+   */
   GetAlertDetailsWithFilters() {
     this.loading = true;
     this.model = [];
@@ -347,3 +346,4 @@ export class AlertListComponent
   }
 
 }
+
