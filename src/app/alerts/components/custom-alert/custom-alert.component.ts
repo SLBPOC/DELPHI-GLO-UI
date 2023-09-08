@@ -39,6 +39,7 @@ export class CustomAlertComponent {
   isActive:boolean=true;
   customAlerts: customAlert[]=[];
   well!:WellListModel[];
+  flag=false;
   customAlert: customAlert=
       {
         id:0,
@@ -55,6 +56,7 @@ export class CustomAlertComponent {
       };
       @Input() selectedRangeValue!: DateRange<Date>;
       @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
+      
     constructor(private fb: FormBuilder,private CustomAlertService:CustomAlertService ,private dialogRef: MatDialogRef<CustomAlertComponent>) {
      
     }
@@ -62,6 +64,7 @@ export class CustomAlertComponent {
       this.getAlertDetails();
       this.getWellDropdown();
     }
+    submitted = false;
       public dateControl = new FormControl(new Date(2021,9,4,5,6,7));
       public dateControlMinMax = new FormControl(new Date());
       customAlertForm = this.fb.group({
@@ -93,6 +96,7 @@ export class CustomAlertComponent {
         }
       }
       this.selectedRangeValueChange.emit(this.selectedRangeValue);
+      this.flag = false;
     }
     
     getWellDropdown()
@@ -105,6 +109,7 @@ export class CustomAlertComponent {
         })
     }
     getAlertDetails(){
+      this.submitted = false;
       this.CustomAlertService.displayDetails()
         .subscribe((res)=>{
           this.alertData = res;
@@ -130,35 +135,46 @@ export class CustomAlertComponent {
     }
 
     onSubmit(){
-      let obj:any;
-      let timeZone = this.date.toISOString().slice(-4);
-      let time = this.date.toTimeString().slice(0,8);
-      let customTime = "T" + time + "." + timeZone;
-      this.applyDateRangeFilter();
-      this.startDate = this.startDate +  customTime;      
-      this.endDate = this.endDate +  customTime;
-      obj = { 
-        wellName:this.customAlertForm.value.wellName,
-        customAlertName:this.customAlertForm.value.CustomAlertName,     
-        notificationType:this.customAlertForm.value.NotificationType,
-        priority:this.customAlertForm.value.Priority,
-        category:this.customAlertForm.value.Category,
-        operator:this.customAlertForm.value.Operator,
-        value:this.customAlertForm.value.Value,
-        isActive:this.customAlertForm.value.IsActive,
-        startDate:this.startDate,
-        endDate:this.endDate
+      
+      if(this.customAlertForm.value!=null)
+      {this.submitted = true;
+        this.flag=true;
+        let obj:any;
+        let timeZone = this.date.toISOString().slice(-4);
+        let time = this.date.toTimeString().slice(0,8);
+        let customTime = "T" + time + "." + timeZone;
+        this.applyDateRangeFilter();
+        this.startDate = this.startDate +  customTime;      
+        this.endDate = this.endDate +  customTime;
+        obj = { 
+          wellName:this.customAlertForm.value.wellName,
+          customAlertName:this.customAlertForm.value.CustomAlertName,     
+          notificationType:this.customAlertForm.value.NotificationType,
+          priority:this.customAlertForm.value.Priority,
+          category:this.customAlertForm.value.Category,
+          operator:this.customAlertForm.value.Operator,
+          value:this.customAlertForm.value.Value,
+          isActive:this.customAlertForm.value.IsActive,
+          startDate:this.startDate,
+          endDate:this.endDate
+        }
+        console.log(obj);
+        this.CustomAlertService.addCustomAlert(obj).subscribe((res)=>{   
+          console.log(res);
+          if(res!=null)
+          {
+            alert("Records added successfully");
+          }     
+            this.getAlertDetails();     
+            this.clear();
+            this.flag = false;
+        });
       }
-      console.log(obj);
-      this.CustomAlertService.addCustomAlert(obj).subscribe((res)=>{   
-        console.log(res);
-        if(res!=null)
-        {
-          alert("Records added successfully");
-        }     
-          this.getAlertDetails();     
-          this.clear();
-      });
+      else
+      {
+        this.flag=false;
+      }
+      this.flag=false;
     }
     
     editAlert(Id:number)
