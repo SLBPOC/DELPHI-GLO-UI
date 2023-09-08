@@ -12,7 +12,7 @@ const routes: Routes = [
     component: WellListComponent,
     children: [
       {
-        path: 'well-view-tabs',
+        path: 'well-view-tabs/:id',
         component: WellViewTabsComponent,
       }
 
