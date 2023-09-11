@@ -559,7 +559,7 @@
             <th
               mat-header-cell
               *matHeaderCellDef
-              [attr.colspan]="displayedColumns.length == 13 ? '5' : '11'"
+              [attr.colspan]="displayedColumns.length == 13 ? '5' : '10'"
             >
               Last Cycle
             </th>
@@ -567,14 +567,14 @@
 
           <!-- Header row second group -->
           <ng-container matColumnDef="header-row-current-cycle-group">
-            <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="3">
               Current Cycle
             </th>
           </ng-container>
 
           <!-- Header row second group -->
           <ng-container matColumnDef="header-row-mode-of-operation-group">
-            <th mat-header-cell *matHeaderCellDef [attr.colspan]="2">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="3">
               Mode of Operation
             </th>
           </ng-container>
