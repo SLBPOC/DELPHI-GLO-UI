@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { customAlert } from '../model/custom-alert';
 import { Observable } from 'rxjs';
+import { WellListModel } from './models/well-list';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,9 @@ export class CustomAlertService {
   }
   getDetails(id:number):Observable<customAlert>{
     return this.http.get<customAlert>(this.apiUrl + 'CustomAlert/GetById?Id=' + id);
+  }
+
+  getWellName():Observable<WellListModel[]>{
+    return this.http.get<WellListModel[]>(this.apiUrl + 'api/Well/GetWellName');
   }
 }

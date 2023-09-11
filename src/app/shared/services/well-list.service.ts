@@ -26,11 +26,13 @@ export class WellListService {
     pageIndex: any,
     pageSize: any,
     searchString: any,
+    ApprovalStatus: any,
+    ApprovalMode: any,
     searchsortExpression: any
   ): Observable<any> {
     return this.http.post<WellListModel[]>(
       this.apiUrl +
-        `Well/GetWellList?pageIndex=${pageIndex}&pageSize=${pageSize}&searchString=${searchString}`,
+        `Well/GetWellList?pageIndex=${pageIndex}&pageSize=${pageSize}&searchString=${searchString}&ApprovalStatus=${ApprovalStatus}&ApprovalMode=${ApprovalMode}`,
       searchsortExpression,
       this.httpOptions
     );

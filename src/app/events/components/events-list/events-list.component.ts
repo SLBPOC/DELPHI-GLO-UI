@@ -116,6 +116,7 @@ export class EventsListComponent implements AfterViewInit {
   ngOnInit() {
 
     this.GetEventDetailsWithFilters(null,null,null,null);
+    this.clearParams(['eventType', 'status']);
   }
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   ngAfterViewInit() {
@@ -361,22 +362,25 @@ export class EventsListComponent implements AfterViewInit {
     }
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
-  status: any;
+  status: any="";
   getStatus(event: any) {
     this.status = event.value;
   }
-  type: any;
+  type: any="";
   getType(event: any) {
     this.type = event.value;
   }
   applyFilters(event: any) {
+debugger;
 
     let status = this.status;
     let type = this.type;
     this.GetEventListWithDateFilters("", "", type,status);
     // const filterValue = (event.target as HTMLInputElement).value;
     // this.dataSource.filter = filterValue.trim().toLowerCase();
+    
 
+    this.clearParams(['eventType', 'status']);
     // if (this.dataSource.paginator) {
     //   this.dataSource.paginator.firstPage();
     // }

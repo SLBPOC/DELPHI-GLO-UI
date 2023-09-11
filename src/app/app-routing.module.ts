@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SidenavComponent } from './shared/components/sidenav/sidenav.component';
+import { WellViewTabsComponent } from './well-list/components/well-view-tabs/well-view-tabs.component';
 const routes: Routes = [
   // { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   // { path: 'well-list', loadChildren: () => import('./well-list/well-list.module').then(m => m.WellListModule) },
@@ -21,7 +22,9 @@ const routes: Routes = [
   { path: 'alerts', loadChildren: () => import('./alerts/alerts.module').then(m => m.AlertsModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },  { path: 'reports', loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule) },
     ]
-  }
+  },
+  
+
 ];
 
 // const routes: Routes = [
