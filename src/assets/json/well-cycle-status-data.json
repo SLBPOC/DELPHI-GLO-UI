@@ -1,0 +1,23 @@
+[
+    {
+        "cycleName": "C1",
+        "compUptimeCycle1": 92,
+        "compUptimeCycle2": 85,
+        "compUptimeCycle3": 70,
+        "compUptimeCycle4": "active"
+    },
+    {
+        "cycleName": "C2",
+        "prodUptimeCycle1": 95,
+        "prodUptimeCycle2": 92,
+        "prodUptimeCycle3": 80,
+        "prodUptimeCycle4": "stable"
+    },
+    {
+        "cycleName": "Total Uptime",
+        "totalUptimeCycle1": 94,
+        "totalUptimeCycle2": 88,
+        "totalUptimeCycle3": 75,
+        "totalUptimeCycle4": "rate-estimation"
+    }
+]

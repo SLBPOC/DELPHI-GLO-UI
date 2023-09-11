@@ -7,12 +7,58 @@
                     <div class="panel-section ">
                         <div class="mat-mdc-tab-body-wrapper-block">
                             <p>Swimlane Graph will be displayed here</p>
+                            <table class="cycle-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Cycle 1</th>
+                                        <th>Cycle 2</th>
+                                        <th>Cycle 3</th>
+                                        <th>Cycle 4</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="cycle-row-height">
+                                        <td>C1</td>
+                                        <td><span class="cycle-status-active"></span></td>
+                                        <td><span class="cycle-status-inactive"></span></td>
+                                        <td><span class="cycle-status-inactive"></span></td>
+                                        <td><span class="cycle-status-active"></span></td>
+                                    </tr>
+                                    <tr class="cycle-row-height">
+                                        <td>C2</td>
+                                        <td><span class="cycle-status-active"></span></td>
+                                        <td><span class="cycle-status-active"></span></td>
+                                        <td><span class="cycle-status-inactive"></span></td>
+                                        <td><span class="cycle-status-wa"></span></td>
+                                    </tr>
+                                    <tr class="cycle-row-height">
+                                        <td>Total Uptime</td>
+                                        <td><span class="cycle-status-active"></span></td>
+                                        <td><span class="cycle-status-inactive"></span></td>
+                                        <td><span class="cycle-status-inactive"></span></td>
+                                        <td><span class="cycle-status-re"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="panel-section dis-block">
-
+                        <div class="panel-section margintop">
+                            <div class="legend-section">
+                                <ul>
+                                    <li>C1 - Compressor Uptime</li><br>
+                                    <li>C2 - Production Uptime</li><br>
+                                    <li><span class="cycle-status-active"></span><span>Active</span></li><br>
+                                    <li><span class="cycle-status-inactive"></span><span>Inactive</span></li><br>
+                                    <li><span class="cycle-status-stable"></span><span>Stabilisation</span></li><br>
+                                    <li><span class="cycle-status-re"></span><span>Rate estimation</span></li><br>
+                                    <li><span class="cycle-status-wa"></span><span>Waiting for Approval</span></li><br>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="pridiction-table tableContainer  example-container mat-elevation-z8">
                             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                                 <!-- Timestamp -->

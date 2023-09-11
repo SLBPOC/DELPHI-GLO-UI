@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { WellDetailViewService } from '../../../shared/services/well-detail-view.service'
 interface Food {
   value: string;
   viewValue: string;
@@ -31,6 +32,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class WellDetailViewComponent {
 
+  wellCycles!: any;
+
+  constructor(private wellDetailService: WellDetailViewService) {}
+
   displayedColumns: string[] = ['gl_setpoint', 'qi_units', 'qw_units', 'wc_units'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   foods: Food[] = [
@@ -38,9 +43,22 @@ export class WellDetailViewComponent {
     { value: 'pizza-1', viewValue: 'Pizza' },
     { value: 'tacos-2', viewValue: 'Tacos' },
   ];
+
+  // wellCycleStatus = [
+  //   { c1: 'steak-0', viewValue: 'Steak' },
+  //   { value: 'pizza-1', viewValue: 'Pizza' },
+  //   { value: 'tacos-2', viewValue: 'Tacos' },
+  // ]
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
+
+  ngOnInit(){
+    this.wellDetailService.getWellCycles().subscribe((resp) => {
+      this.wellCycles = resp;
+      debugger
+    })
+  }
 
 }
