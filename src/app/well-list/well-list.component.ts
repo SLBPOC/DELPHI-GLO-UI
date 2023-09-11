@@ -159,7 +159,7 @@ export class WellListComponent {
   }
 
   getData(id: any) {
-    this.router.navigate(['/glo/feature/wellInfo', id]);
+    this.router.navigate(['/well-view-tabs', id]);
     //console.log(id);
   }
 
@@ -258,8 +258,6 @@ export class WellListComponent {
   }
   ApplyByFilter(value: string) {
     this.ApprovalMode = value;
-    console.log('ApplyByFilter');
-
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
