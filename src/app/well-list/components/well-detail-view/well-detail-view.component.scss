@@ -1,3 +1,80 @@
+.cycle-table {
+    color: antiquewhite;
+    width: 100%;
+}
+
+.cycle-column {
+    width: 3%;
+}
+
+.cycle-table 
+{
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+      }
+}
+
+.cycle-status-active {
+    height: 25px;
+    width: 25px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cycle-status-inactive {
+    height: 25px;
+    width: 25px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cycle-status-re {
+    height: 25px;
+    width: 25px;
+    background-color: darkorange;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cycle-status-stable {
+    height: 25px;
+    width: 25px;
+    background-color: yellow;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cycle-status-wa {
+    height: 25px;
+    width: 25px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cycle-row-height {
+    height: 60px;
+}
+
+.legend-section {
+    ul {
+        padding: 0px 20px;
+
+        li {
+            display: inline-block;
+            font-size: 16px;
+            color: aliceblue;
+            font-weight: 500;
+            padding-right: 20px;
+            line-height: 45px;
+        }
+    }
+}
+
 .position-relative {
     position: relative;
 
