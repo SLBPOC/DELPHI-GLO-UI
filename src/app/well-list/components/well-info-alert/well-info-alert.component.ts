@@ -39,8 +39,8 @@ export class AppWellInfoAlertComponent {
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
   displayedColumns: string[] = [
-    'stat',
-    'WellName',
+    // 'stat',
+    // 'WellName',
     'TimeandDate',
     'AlertDescription',
     'action',
@@ -100,6 +100,7 @@ export class AppWellInfoAlertComponent {
     // this.setgridData();
     this._route.params.subscribe((params) => {
       this.searchString = params['WellName'];
+      this.GetAlertDetailsWithFilters();
     });
     this.GetAlertDetailsWithFilters();
   }

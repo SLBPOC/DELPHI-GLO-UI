@@ -8,7 +8,11 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
   DateRange,
@@ -65,32 +69,33 @@ export class EventsListComponent implements AfterViewInit {
   totalCount: number = 0;
   daysSelected: any[] = [];
   event: any;
-  searchString: string = "";
-  eventStatus:string="";
-  eventType:string="";
+  searchString: string = '';
+  eventStatus: string = '';
+  eventType: string = '';
   model: any = [];
-  seachByStatus: string = "";
-  sortDirection: string = "";
-  sortColumn: string = "";
+  seachByStatus: string = '';
+  sortDirection: string = '';
+  sortColumn: string = '';
   pageSize: number = 10;
   pageNumber: number = 1;
   pageIndex: number = 1;
   skip = 0;
   sortExpression = [{ dir: 'asc', field: 'name' }];
-  startDate=new Date();
-  endDate=new Date;
+  startDate = new Date();
+  endDate = new Date();
   currentPage = 0;
-  searchModel1 : any[] = [];
+  searchModel1: any[] = [];
   todayDate: Date = new Date();
   eventFormModel: EventFormModel = new EventFormModel();
   slbSearchParams: SLBSearchParams = new SLBSearchParams();
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
-    "Priority",
-    "WellName",
-    "EventType",
-    "EventDescription",
-    "CreationDateTime"
+    // "Priority",
+    'WellName',
+    'EventType',
+    'EventStatus',
+    'EventDescription',
+    'CreationDateTime',
   ];
 
   eventTypes = ['Type1', 'Type2', 'Type3'];
@@ -99,7 +104,7 @@ export class EventsListComponent implements AfterViewInit {
     start: new FormControl(),
     end: new FormControl(),
   });
-  
+
   pipe!: DatePipe;
   loading = true;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -114,177 +119,208 @@ export class EventsListComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-
-    this.GetEventDetailsWithFilters(null,null,null,null);
+    this.GetEventDetailsWithFilters(null, null, null, null);
   }
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   ngAfterViewInit() {
-
     // this.dataSource.paginator = this.paginator;
-    fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
-      map(event => event.target.value),
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(x => this.searchString = x)
-    ).subscribe(x => {
-      if (x != undefined && x.trim() != "") {
-        this.GetEventDetailsWithFilters(null,null,this.EventType,this.eventStatus);
-      }
-    });
-  }
-  GetEventDetailsWithFilters(startDate: any, endDate: any, eventStatus: any, eventType: any) {
-    debugger;
-    this.eventList=[];
-    this.loading = true;
-    this.model=[];
-    var SearchModel = this.createModel();
-    this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize,this.searchString, startDate,endDate,eventType,eventStatus).subscribe(response => {
-      if (response.hasOwnProperty('data')) {
-        this.loading = false;
-        this.eventList = response.data;
-        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = response.totalCount;
-        });
-
-        this.totalCount = response.totalCount;
-      }
-    });
-  }
-  GetEventDetailsPage(pageIndex:any ,pageSize:any) {
-    debugger;
-    this.eventList=[];
-    this.loading = true;
-    this.model=[];
-    var SearchModel = this.createModel();
-    this.service.getEventDetailsWithFilters(SearchModel,pageIndex,pageSize).subscribe(response => {
-      if (response.hasOwnProperty('data')) {
-        this.loading = false;
-        this.eventList = response.data;
-        this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = response.totalCount;
-        });
-
-        this.totalCount = response.totalCount;
-      }
-    });
-  }
-
-  GetEventListWithDateFilters(startDate: any, endDate: any, eventStatus: any, eventType: any) {
-    debugger;
-    this.eventList=[];
-    this.loading = true;
-    this.model=[];
-    var SearchModel = this.createModel();
-    this.service.getEventDetailsWithFilters(SearchModel,this.pageIndex,this.pageSize, this.searchString,startDate, endDate, eventStatus, eventType).subscribe(response => {
-    //   if (response.hasOwnProperty('data')) {
-    //     this.loading = false;
-    //     debugger;
-    //     this.eventList = response.data;
-    //     this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-    //     setTimeout(() => {
-    //       this.paginator.pageIndex = this.currentPage;
-    //       this.paginator.length = response.totalCount;
-    //     });
-    //   }
-    // });
-    if (response.status != 404) {
-
-      this.loading = false;
-
-      this.eventList = response.data;
-
-      this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-
-      setTimeout(() => {
-
-        this.totalCount = response.totalCount;
-
-        this.paginator.pageIndex = this.currentPage;
-
-        this.paginator.length = response.totalCount;
-
+    fromEvent<any>(this.searchInput.nativeElement, 'keyup')
+      .pipe(
+        map((event) => event.target.value),
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap((x) => (this.searchString = x))
+      )
+      .subscribe((x) => {
+        if (x != undefined && x.trim() != '') {
+          this.GetEventDetailsWithFilters(
+            null,
+            null,
+            this.EventType,
+            this.eventStatus
+          );
+        }
       });
-
-    }
-
-  },(err) => {
-
-    this.loading = false;
-
-    this.eventList = []
-
-    this.dataSource = new MatTableDataSource<EventList>(this.eventList);
-
-  });
   }
- 
+  GetEventDetailsWithFilters(
+    startDate: any,
+    endDate: any,
+    eventStatus: any,
+    eventType: any
+  ) {
+    debugger;
+    this.eventList = [];
+    this.loading = true;
+    this.model = [];
+    var SearchModel = this.createModel();
+    this.service
+      .getEventDetailsWithFilters(
+        SearchModel,
+        this.pageIndex,
+        this.pageSize,
+        this.searchString,
+        startDate,
+        endDate,
+        eventType,
+        eventStatus
+      )
+      .subscribe((response) => {
+        if (response.hasOwnProperty('data')) {
+          this.loading = false;
+          this.eventList = response.data;
+          this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+          setTimeout(() => {
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = response.totalCount;
+          });
+
+          this.totalCount = response.totalCount;
+        }
+      });
+  }
+  GetEventDetailsPage(pageIndex: any, pageSize: any) {
+    debugger;
+    this.eventList = [];
+    this.loading = true;
+    this.model = [];
+    var SearchModel = this.createModel();
+    this.service
+      .getEventDetailsWithFilters(SearchModel, pageIndex, pageSize)
+      .subscribe((response) => {
+        if (response.hasOwnProperty('data')) {
+          this.loading = false;
+          this.eventList = response.data;
+          this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+          setTimeout(() => {
+            this.paginator.pageIndex = this.currentPage;
+            this.paginator.length = response.totalCount;
+          });
+
+          this.totalCount = response.totalCount;
+        }
+      });
+  }
+
+  GetEventListWithDateFilters(
+    startDate: any,
+    endDate: any,
+    eventStatus: any,
+    eventType: any
+  ) {
+    debugger;
+    this.eventList = [];
+    this.loading = true;
+    this.model = [];
+    var SearchModel = this.createModel();
+    this.service
+      .getEventDetailsWithFilters(
+        SearchModel,
+        this.pageIndex,
+        this.pageSize,
+        this.searchString,
+        startDate,
+        endDate,
+        eventStatus,
+        eventType
+      )
+      .subscribe(
+        (response) => {
+          //   if (response.hasOwnProperty('data')) {
+          //     this.loading = false;
+          //     debugger;
+          //     this.eventList = response.data;
+          //     this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+          //     setTimeout(() => {
+          //       this.paginator.pageIndex = this.currentPage;
+          //       this.paginator.length = response.totalCount;
+          //     });
+          //   }
+          // });
+          if (response.status != 404) {
+            this.loading = false;
+
+            this.eventList = response.data;
+
+            this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+
+            setTimeout(() => {
+              this.totalCount = response.totalCount;
+
+              this.paginator.pageIndex = this.currentPage;
+
+              this.paginator.length = response.totalCount;
+            });
+          }
+        },
+        (err) => {
+          this.loading = false;
+
+          this.eventList = [];
+
+          this.dataSource = new MatTableDataSource<EventList>(this.eventList);
+        }
+      );
+  }
+
   searchModel(this: any) {
     // this.model.pageNumber = this.pageNumber;
     // this.model.pageSize = this.pageSize;
     // this.model.skip = this.skip;
     // this.model.searchString = this.searchString ? this.searchString : "";
     let obj = {
+      field: this.sortColumn ? this.sortColumn : '',
 
-      "field": this.sortColumn ? this.sortColumn : "",
-
-    "dir": this.sortDirection ? this.sortDirection : ""
-
-    }
+      dir: this.sortDirection ? this.sortDirection : '',
+    };
     this.model.push(obj);
-   // this.model.status = this.seachByStatus ? this.seachByStatus : "";
+    // this.model.status = this.seachByStatus ? this.seachByStatus : "";
     return this.model;
   }
   createModel(this: any) {
     let obj = {
+      field: this.sortColumn ? this.sortColumn : '',
 
-      "field": this.sortColumn ? this.sortColumn : "",
-
-    "dir": this.sortDirection ? this.sortDirection : ""
-
-    }
+      dir: this.sortDirection ? this.sortDirection : '',
+    };
     this.model.push(obj);
 
     return this.model;
-
   }
 
   pageChanged(event: PageEvent) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
     this.pageNumber = event.pageIndex + 1;
-    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
+    this.GetEventDetailsPage(this.pageNumber, this.pageSize);
   }
 
   onSortChanged(e: any) {
     this.pageNumber = this.pageNumber;
     this.pageSize = this.pageSize;
     this.sortDirection = this.sort.direction;
-    this.sortColumn = (typeof this.sort.active !== "undefined") ? this.sort.active : "";
-    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
+    this.sortColumn =
+      typeof this.sort.active !== 'undefined' ? this.sort.active : '';
+    this.GetEventDetailsPage(this.pageNumber, this.pageSize);
   }
   clearSearch() {
     this.pageNumber = 1;
-    this.seachByStatus = "";
-    this.searchString = "";
-    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
+    this.seachByStatus = '';
+    this.searchString = '';
+    this.GetEventDetailsPage(this.pageNumber, this.pageSize);
   }
 
   refresh() {
     this.pageNumber = 1;
-    this.seachByStatus = "";
-    this.searchString = "";
-    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
+    this.seachByStatus = '';
+    this.searchString = '';
+    this.GetEventDetailsPage(this.pageNumber, this.pageSize);
   }
 
   setDateSelected(option: any) {
     this.resetDateRangeFilters();
     switch (option) {
       case DateRanges.DAY:
-        let today = (new Date()).toISOString();
+        let today = new Date().toISOString();
         const filterValue = today.substring(0, 10);
         this.dataSource.filter = filterValue.trim().toLowerCase();
         break;
@@ -293,31 +329,38 @@ export class EventsListComponent implements AfterViewInit {
         let curr = new Date(); // get current date
         let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
         let last = first + 6; // last day is the first day + 6
-        let firstday = (new Date(curr.setDate(first))).toISOString();
-        let lastday = (new Date(curr.setDate(last))).toISOString();
+        let firstday = new Date(curr.setDate(first)).toISOString();
+        let lastday = new Date(curr.setDate(last)).toISOString();
         this.dataSource.filterPredicate = (data: any) => {
           if (firstday && lastday) {
             return data.date >= firstday && data.date <= lastday;
           }
           return true;
-        }
+        };
         this.dataSource.filter = '' + Math.random();
         break;
 
       case DateRanges.MONTH:
         let date = new Date();
-        let firstDay = (new Date(date.getFullYear(), date.getMonth(), 1)).toISOString();
-        let lastDay = (new Date(date.getFullYear(), date.getMonth() + 1, 0)).toISOString();
+        let firstDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          1
+        ).toISOString();
+        let lastDay = new Date(
+          date.getFullYear(),
+          date.getMonth() + 1,
+          0
+        ).toISOString();
         this.dataSource.filterPredicate = (data: any) => {
           if (firstDay && lastDay) {
             return data.date >= firstDay && data.date <= lastDay;
           }
           return true;
-        }
+        };
         this.dataSource.filter = '' + Math.random();
         break;
     }
-
   }
 
   resetDateRangeFilters() {
@@ -338,13 +381,22 @@ export class EventsListComponent implements AfterViewInit {
   }
 
   applyDateRangeFilter() {
-
     debugger;
     let fromDate = this.selectedRangeValue.start;
     let toDate = this.selectedRangeValue.end;
-    let startDate = fromDate?.getFullYear() + '-' + this.getSelectedMonth(fromDate?.getMonth()) + '-' + this.getSelectedDay(fromDate?.getDate());
-    let endDate = toDate?.getFullYear() + '-' + this.getSelectedMonth(toDate?.getMonth()) + '-' + this.getSelectedDay(toDate?.getDate());
-    this.GetEventListWithDateFilters(startDate, endDate, "", "");
+    let startDate =
+      fromDate?.getFullYear() +
+      '-' +
+      this.getSelectedMonth(fromDate?.getMonth()) +
+      '-' +
+      this.getSelectedDay(fromDate?.getDate());
+    let endDate =
+      toDate?.getFullYear() +
+      '-' +
+      this.getSelectedMonth(toDate?.getMonth()) +
+      '-' +
+      this.getSelectedDay(toDate?.getDate());
+    this.GetEventListWithDateFilters(startDate, endDate, '', '');
   }
 
   selectedChange(m: any) {
@@ -370,10 +422,9 @@ export class EventsListComponent implements AfterViewInit {
     this.type = event.value;
   }
   applyFilters(event: any) {
-
     let status = this.status;
     let type = this.type;
-    this.GetEventListWithDateFilters("", "", type,status);
+    this.GetEventListWithDateFilters('', '', type, status);
     // const filterValue = (event.target as HTMLInputElement).value;
     // this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -397,7 +448,7 @@ export class EventsListComponent implements AfterViewInit {
     this.eventFormModel.eventType = 0;
     this.eventFormModel.status = 0;
     this.clearParams(['eventType', 'status']);
-    this.GetEventDetailsPage(this.pageNumber,this.pageSize);
+    this.GetEventDetailsPage(this.pageNumber, this.pageSize);
   }
   clearParams(paramName: string[]) {
     if (
@@ -409,5 +460,4 @@ export class EventsListComponent implements AfterViewInit {
       paramName.forEach((x) => this.slbSearchParams.params.delete(x));
     }
   }
-
 }
