@@ -1,3 +1,13 @@
+import { MatTableDataSource } from '@angular/material/table';
+import { DateRange } from '@angular/material/datepicker';
+import { AlertListService } from '../../../shared/services/alert-list.service';
+import { AlertList } from '../../../shared/models/alert-list';
+import { MatSort } from '@angular/material/sort';
+import { FormGroup, FormControl } from '@angular/forms';
+import { CustomAlertComponent } from '../../../alerts/components/custom-alert/custom-alert.component';
+import { MatDialog } from '@angular/material/dialog';
+import { fromEvent, map, debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Component,
   ElementRef,
@@ -7,16 +17,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { DateRange } from '@angular/material/datepicker';
-import { AlertListService } from '../../../shared/services/alert-list.service';
-import { AlertList } from '../../../shared/models/alert-list';
-import { MatSort } from '@angular/material/sort';
-import { FormGroup, FormControl } from '@angular/forms';
-import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
-import { MatDialog } from '@angular/material/dialog';
-import { fromEvent, map, debounceTime, distinctUntilChanged, tap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
 
 interface Option {
   id: string;
@@ -30,17 +30,17 @@ enum DateRanges {
 }
 
 @Component({
-  selector: 'app-alert-list',
-  templateUrl: './alert-list.component.html',
-  styleUrls: ['./alert-list.component.scss'],
+  selector: 'app-well-info-alert',
+  templateUrl: './well-info-alert.component.html',
+  styleUrls: ['./well-info-alert.component.scss'],
 })
-export class AlertListComponent {
+export class WellInfoAlertComponent {
   alertList!: AlertList[];
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
   displayedColumns: string[] = [
-    'stat',
-    'WellName',
+    // 'stat',
+    // 'WellName',
     'TimeandDate',
     'AlertDescription',
     'action',
@@ -52,6 +52,8 @@ export class AlertListComponent {
   searchQueryInput: any;
   clearAlertsComments!: string;
   searchString: string = '';
+  alertName: string = '';
+  searchStringWell: number = 0;
 
   sortDirection: string = '';
   sortColumn: string = '';
@@ -60,13 +62,12 @@ export class AlertListComponent {
   skip = 0;
   currentPage = 0;
   model: any = [];
+  alertTest: any = [];
   seachByStatus: string = '';
   loading = true;
   snoozeByTime: number = 1;
   showSnoozeDialog: boolean = false;
   totalCount: number = 0;
-  isDisable: boolean = false;
-  SnoozeFlag: boolean = false;
 
   defaultFilterPredicate?: (data: any, filter: string) => boolean;
 
@@ -99,9 +100,11 @@ export class AlertListComponent {
   }
 
   ngOnInit() {
+    // this.setgridData();
     this._route.params.subscribe((params) => {
-      this.searchString = params['WellName'];
+      this.searchString = params['id'];
     });
+
     this.GetAlertDetailsWithFilters();
   }
 
@@ -125,6 +128,10 @@ export class AlertListComponent {
           if (response.status != 404) {
             this.loading = false;
             this.alertList = response.data;
+            this.alertTest = this.alertList.find(
+              (x) => x.Id == Number(this.searchString)
+            );
+            this.alertName = this.alertTest.WellName;
             this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
             this.getLegendCount();
             this.moveClearAlertsToBottom();
@@ -134,6 +141,7 @@ export class AlertListComponent {
             });
 
             this.totalCount = response.totalCount;
+            this.searchStringWell = response.WellName;
             this.paginator.pageIndex = this.currentPage;
             this.paginator.length = response.totalCount;
           }
@@ -164,11 +172,14 @@ export class AlertListComponent {
           if (response.status != 404) {
             this.loading = false;
             this.alertList = response.data;
+
+            // console.log(this.alertList.WellName)
             this.dataSource = new MatTableDataSource<AlertList>(this.alertList);
             this.getLegendCount();
             this.moveClearAlertsToBottom();
             setTimeout(() => {
               this.totalCount = response.totalCount;
+
               this.paginator.pageIndex = this.currentPage;
               this.paginator.length = response.totalCount;
             });
@@ -271,8 +282,6 @@ export class AlertListComponent {
       if (data.success == true) {
         this.GetAlertDetailsWithFilters();
         this.loading = false;
-        // this.isDisable = true;
-        // this.SnoozeFlag = true;
       }
     });
   }

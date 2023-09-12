@@ -22,16 +22,16 @@
   <div class="tableContainer">
     <div class="tabletophead">
       <div class="lefthead">
-        <h2>Events List</h2>
+        <h2>Events List for {{ eventName }}</h2>
       </div>
       <div class="righthead">
         <!-- <div class="prioritywrapper">
-          <ul>
-            <li class="priority high">High</li>
-            <li class="priority medium">Medium</li>
-            <li class="priority low">Low</li>
-          </ul>
-        </div> -->
+            <ul>
+              <li class="priority high">High</li>
+              <li class="priority medium">Medium</li>
+              <li class="priority low">Low</li>
+            </ul>
+          </div> -->
 
         <div class="searchBar">
           <input
@@ -361,22 +361,22 @@
     >
     </mat-paginator>
     <!-- <button mat-icon-button [matMeshowFirstLastButtonsnuTriggerFor]="appMenu">
-
-      <mat-icon>calendar_today</mat-icon>
-
-    </button>
-
-    <mat-menu #appMenu="matMenu">
-
-      <div (click)="$event.stopPropagation()">
-
-        <mat-calendar #calendar1 (selectedChange)="selectedChange($event)" [dateClass]="isSelected"
-          [selected]="todayDate">
-
-        </mat-calendar>
-
-      </div>
-
-    </mat-menu> -->
+  
+        <mat-icon>calendar_today</mat-icon>
+  
+      </button>
+  
+      <mat-menu #appMenu="matMenu">
+  
+        <div (click)="$event.stopPropagation()">
+  
+          <mat-calendar #calendar1 (selectedChange)="selectedChange($event)" [dateClass]="isSelected"
+            [selected]="todayDate">
+  
+          </mat-calendar>
+  
+        </div>
+  
+      </mat-menu> -->
   </div>
 </div>

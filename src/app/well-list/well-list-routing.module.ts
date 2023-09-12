@@ -14,14 +14,13 @@ const routes: Routes = [
       {
         path: 'well-view-tabs/:id',
         component: WellViewTabsComponent,
-      }
-
-    ]
+      },
+    ],
   },
   {
     path: 'well-info',
     component: WellInfoComponent,
-  }
+  },
 ];
 
 @NgModule({

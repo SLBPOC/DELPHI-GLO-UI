@@ -5,29 +5,34 @@ import { WellsService } from 'src/app/shared/services/wells.service';
 @Component({
   selector: 'app-well-view-tabs',
   templateUrl: './well-view-tabs.component.html',
-  styleUrls: ['./well-view-tabs.component.scss']
+  styleUrls: ['./well-view-tabs.component.scss'],
 })
 export class WellViewTabsComponent {
   wellInfo!: any;
-  wellId!:any;
-  qo1!:number;
-  loader=false;
+  wellId!: any;
+  qo1!: number;
+  loader = false;
+  searchString: string = '';
 
   @Output('wellDetails') wellDetails: EventEmitter<any> = new EventEmitter<any>();
-  constructor(private service: WellsService,private _Activatedroute:ActivatedRoute) {
-    this.wellId=this._Activatedroute.snapshot.paramMap.get("id");
+
+  constructor(
+    private service: WellsService,
+    private _Activatedroute: ActivatedRoute
+  ) {
+    this.wellId = this._Activatedroute.snapshot.paramMap.get('id');
     console.log(this.wellId);
   }
-  ngOnInit() { 
-    this.loader=true;   
+  ngOnInit() {
+    this.loader = true;
     this.getWellGeneralInfo();
   }
 
-  getWellGeneralInfo()
-  {
+  getWellGeneralInfo() {
     this.service.getWellInfo(this.wellId).subscribe((resp) => {
-      this.wellInfo = resp;  
-      this.loader=false;
+      this.wellInfo = resp;
+      this.searchString = this.wellInfo.wellName;
+      this.loader = false;
       let detailedWellInfo = this.wellInfo;
       this.wellDetails.emit(detailedWellInfo);
     });

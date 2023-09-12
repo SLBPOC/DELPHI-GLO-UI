@@ -32,6 +32,7 @@ import { EventListService } from 'src/app/shared/services/event-list.service';
 import { EventList } from 'src/app/shared/models/event-list';
 import { debounceTime, distinctUntilChanged, fromEvent, map, tap } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Food {
   value: string;
@@ -60,11 +61,11 @@ enum DateRanges {
 }
 
 @Component({
-  selector: 'app-events-list',
-  templateUrl: './events-list.component.html',
-  styleUrls: ['./events-list.component.scss'],
+  selector: 'app-well-info-event-log',
+  templateUrl: './well-info-event-log.component.html',
+  styleUrls: ['./well-info-event-log.component.scss'],
 })
-export class EventsListComponent implements AfterViewInit {
+export class WellInfoEventLogComponent {
   eventList!: EventList[];
   totalCount: number = 0;
   daysSelected: any[] = [];
@@ -76,10 +77,12 @@ export class EventsListComponent implements AfterViewInit {
   seachByStatus: string = '';
   sortDirection: string = '';
   sortColumn: string = '';
+  eventName: string = '';
   pageSize: number = 10;
   pageNumber: number = 1;
   pageIndex: number = 1;
   skip = 0;
+  alertTest: any = [];
   sortExpression = [{ dir: 'asc', field: 'name' }];
   startDate = new Date();
   endDate = new Date();
@@ -90,7 +93,7 @@ export class EventsListComponent implements AfterViewInit {
   slbSearchParams: SLBSearchParams = new SLBSearchParams();
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
-    'Priority',
+    // 'Priority',
     'WellName',
     'EventType',
     'EventStatus',
@@ -114,11 +117,18 @@ export class EventsListComponent implements AfterViewInit {
   @ViewChild(MatSort)
   sort!: MatSort;
   @Input() selectedRangeValue!: DateRange<Date>;
-  constructor(private service: EventListService) {
+  constructor(
+    private service: EventListService,
+    private router: Router,
+    private _route: ActivatedRoute
+  ) {
     this.dataSource = new MatTableDataSource<any>([]);
   }
 
   ngOnInit() {
+    this._route.params.subscribe((params) => {
+      this.searchString = params['id'];
+    });
     this.GetEventDetailsWithFilters(null, null, null, null);
     this.clearParams(['eventType', 'status']);
   }
@@ -169,6 +179,10 @@ export class EventsListComponent implements AfterViewInit {
         if (response.hasOwnProperty('data')) {
           this.loading = false;
           this.eventList = response.data;
+          // this.alertTest = this.eventList.find(
+          //   (x) => x.eventId == Number(this.searchString)
+          // );
+          // this.eventName = this.alertTest.WellName;
           this.dataSource = new MatTableDataSource<EventList>(this.eventList);
           setTimeout(() => {
             this.paginator.pageIndex = this.currentPage;
