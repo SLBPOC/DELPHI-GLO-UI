@@ -65,6 +65,8 @@ export class AlertListComponent {
   snoozeByTime: number = 1;
   showSnoozeDialog: boolean = false;
   totalCount: number = 0;
+  isDisable: boolean = false;
+  SnoozeFlag: boolean = false;
 
   defaultFilterPredicate?: (data: any, filter: string) => boolean;
 
@@ -269,6 +271,8 @@ export class AlertListComponent {
       if (data.success == true) {
         this.GetAlertDetailsWithFilters();
         this.loading = false;
+        // this.isDisable = true;
+        // this.SnoozeFlag = true;
       }
     });
   }

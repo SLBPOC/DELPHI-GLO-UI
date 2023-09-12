@@ -22,16 +22,16 @@
   <div class="tableContainer">
     <div class="tabletophead">
       <div class="lefthead">
-        <h2>Events List for {{ searchString }}</h2>
+        <h2>Events List for {{ eventName }}</h2>
       </div>
       <div class="righthead">
         <!-- <div class="prioritywrapper">
-              <ul>
-                <li class="priority high">High</li>
-                <li class="priority medium">Medium</li>
-                <li class="priority low">Low</li>
-              </ul>
-            </div> -->
+            <ul>
+              <li class="priority high">High</li>
+              <li class="priority medium">Medium</li>
+              <li class="priority low">Low</li>
+            </ul>
+          </div> -->
 
         <div class="searchBar">
           <input
@@ -295,28 +295,20 @@
       (matSortChange)="onSortChanged($event)"
     >
       <!-- Priority Status Column -->
-      <!-- <ng-container matColumnDef="Priority">
-          <th mat-header-cell *matHeaderCellDef></th>
-  
-          <td mat-cell *matCellDef="let element">
-            <span
-              [ngClass]="
-                element.Priority === 'High'
-                  ? 'high-priorityline'
-                  : element.Priority === 'Medium'
-                  ? 'med-priorityline'
-                  : 'low-priorityline'
-              "
-            ></span>
-          </td>
-        </ng-container> -->
+      <ng-container matColumnDef="Priority">
+        <th mat-header-cell *matHeaderCellDef></th>
+
+        <td mat-cell *matCellDef="let element">
+          <!-- <span [ngClass]=" element.Priority === 'High' ? 'high-priorityline': element.Priority === 'Medium' ? 'med-priorityline' : 'low-priorityline' "></span> -->
+        </td>
+      </ng-container>
       <!-- Wells Name -->
 
       <ng-container matColumnDef="WellName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Well Name</th>
-        <!-- <td mat-cell *matCellDef="let element" id="well_name">
-            {{ element.WellName }}
-          </td> -->
+        <td mat-cell *matCellDef="let element" id="well_name">
+          {{ element.WellName }}
+        </td>
       </ng-container>
 
       <!--Alert Level -->
@@ -326,11 +318,7 @@
 
         <td mat-cell *matCellDef="let element">{{ element.EventType }}</td>
       </ng-container>
-      <!-- <ng-container matColumnDef="EventStatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Event Status</th>
-    
-            <td mat-cell *matCellDef="let element">{{ element.EventStatus }}</td>
-          </ng-container> -->
+
       <!-- Time and date -->
 
       <ng-container matColumnDef="CreationDateTime">
@@ -373,22 +361,22 @@
     >
     </mat-paginator>
     <!-- <button mat-icon-button [matMeshowFirstLastButtonsnuTriggerFor]="appMenu">
-    
-          <mat-icon>calendar_today</mat-icon>
-    
-        </button>
-    
-        <mat-menu #appMenu="matMenu">
-    
-          <div (click)="$event.stopPropagation()">
-    
-            <mat-calendar #calendar1 (selectedChange)="selectedChange($event)" [dateClass]="isSelected"
-              [selected]="todayDate">
-    
-            </mat-calendar>
-    
-          </div>
-    
-        </mat-menu> -->
+  
+        <mat-icon>calendar_today</mat-icon>
+  
+      </button>
+  
+      <mat-menu #appMenu="matMenu">
+  
+        <div (click)="$event.stopPropagation()">
+  
+          <mat-calendar #calendar1 (selectedChange)="selectedChange($event)" [dateClass]="isSelected"
+            [selected]="todayDate">
+  
+          </mat-calendar>
+  
+        </div>
+  
+      </mat-menu> -->
   </div>
 </div>

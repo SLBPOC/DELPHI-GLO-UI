@@ -67,22 +67,22 @@ enum DateRanges {
 })
 export class WellInfoEventLogComponent {
   eventList!: EventList[];
-  alertTest: any = [];
   totalCount: number = 0;
   daysSelected: any[] = [];
   event: any;
   searchString: string = '';
-  searchStringWellName: string = '';
   eventStatus: string = '';
   eventType: string = '';
   model: any = [];
   seachByStatus: string = '';
   sortDirection: string = '';
   sortColumn: string = '';
+  eventName: string = '';
   pageSize: number = 10;
   pageNumber: number = 1;
   pageIndex: number = 1;
   skip = 0;
+  alertTest: any = [];
   sortExpression = [{ dir: 'asc', field: 'name' }];
   startDate = new Date();
   endDate = new Date();
@@ -130,6 +130,7 @@ export class WellInfoEventLogComponent {
       this.searchString = params['id'];
     });
     this.GetEventDetailsWithFilters(null, null, null, null);
+    this.clearParams(['eventType', 'status']);
   }
   @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   ngAfterViewInit() {
@@ -179,7 +180,7 @@ export class WellInfoEventLogComponent {
           this.loading = false;
           this.eventList = response.data;
           // this.alertTest = this.eventList.find(
-          //   (x) => x. == Number(this.searchString)
+          //   (x) => x.eventId == Number(this.searchString)
           // );
           // this.eventName = this.alertTest.WellName;
           this.dataSource = new MatTableDataSource<EventList>(this.eventList);
@@ -427,21 +428,24 @@ export class WellInfoEventLogComponent {
     }
     this.selectedRangeValueChange.emit(this.selectedRangeValue);
   }
-  status: any;
+  status: any = '';
   getStatus(event: any) {
     this.status = event.value;
   }
-  type: any;
+  type: any = '';
   getType(event: any) {
     this.type = event.value;
   }
   applyFilters(event: any) {
+    debugger;
+
     let status = this.status;
     let type = this.type;
     this.GetEventListWithDateFilters('', '', type, status);
     // const filterValue = (event.target as HTMLInputElement).value;
     // this.dataSource.filter = filterValue.trim().toLowerCase();
 
+    this.clearParams(['eventType', 'status']);
     // if (this.dataSource.paginator) {
     //   this.dataSource.paginator.firstPage();
     // }
