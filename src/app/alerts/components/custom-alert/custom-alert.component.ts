@@ -8,6 +8,7 @@ import { DateRange } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { WellListModel } from 'src/app/shared/models/well-list';
+import { MatSelectChange } from '@angular/material/select';
 @Component({
   selector: 'app-custom-alert',
   templateUrl: './custom-alert.component.html',
@@ -42,6 +43,7 @@ export class CustomAlertComponent {
   customAlert: customAlert=
       {
         id:0,
+        WellId: 0,
         wellName:"",
         customAlertName:"",      
         notificationType:"",
@@ -128,7 +130,14 @@ export class CustomAlertComponent {
       this.startDate = fromDate?.getFullYear() + '-' + this.getSelectedMonth(fromDate?.getMonth()) + '-' + this.getSelectedDay(fromDate?.getDate());
       this.endDate = toDate?.getFullYear() + '-' + this.getSelectedMonth(toDate?.getMonth()) + '-' + this.getSelectedDay(toDate?.getDate()); 
     }
-
+    SelectedWellid = 0;
+    SelectedWellText = "";
+    selectedValue(event: MatSelectChange) {
+      //console.log( event.value);
+      //console.log( event.source.triggerValue);
+      this.SelectedWellid =event.value
+      this.SelectedWellText =event.source.triggerValue
+    }
     onSubmit(){
       let obj:any;
       let timeZone = this.date.toISOString().slice(-4);
@@ -138,7 +147,9 @@ export class CustomAlertComponent {
       this.startDate = this.startDate +  customTime;      
       this.endDate = this.endDate +  customTime;
       obj = { 
-        wellName:this.customAlertForm.value.wellName,
+        //WellId:this.customAlertForm.value.wellName,
+        WellId:this.SelectedWellid,
+        wellName:this.SelectedWellText,
         customAlertName:this.customAlertForm.value.CustomAlertName,     
         notificationType:this.customAlertForm.value.NotificationType,
         priority:this.customAlertForm.value.Priority,

@@ -1,5 +1,6 @@
 export class customAlert {
     id!:number;
+    WellId!:number;
     wellName!:string;
     customAlertName!:string;
     //wellId!:string;    

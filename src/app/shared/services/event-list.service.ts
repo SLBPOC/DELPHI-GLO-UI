@@ -75,7 +75,7 @@ export class EventListService {
   //   }); //a[sort.active].localeCompare(b[sort.active]));
   // }
   getEventDetailsWithFilters(searchModel: any,pageIndex? :any,pageSize?:any, searchString?:any, startDate?: Date, endDate?: Date, eventType?: any, eventStatus?: any): Observable<any> {
-    console.log(eventStatus)
+    /* console.log(eventStatus)
     console.log(eventType)
     var querystring="";
     if (startDate && endDate) {
@@ -93,7 +93,7 @@ export class EventListService {
       querystring = querystring +  `&searchString=${searchString}`
     }
     console.log(querystring)
-  
+   */
     //console.log(this._apiUrl + `api/Event/GetEventList?${querystring}`)
     //return this.http.post<EventList[]>(this._apiUrl + `api/Event/GetEventList?${querystring}`, searchModel);
    if (startDate && endDate) {

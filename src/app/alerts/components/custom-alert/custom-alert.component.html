@@ -13,8 +13,8 @@
                         </mat-form-field>
                         <div class="select-lbl">Select well Name</div>
                         <mat-form-field appearance="outline">
-                            <mat-select placeholder="Select Well Name" formControlName="wellName">
-                                <mat-option *ngFor="let items of well" [value]="items.wellName">{{ items.wellName }}
+                            <mat-select placeholder="Select Well Name" formControlName="wellName" (selectionChange)="selectedValue($event)">
+                                <mat-option *ngFor="let items of well" [value]="items.id">{{ items.wellName }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
