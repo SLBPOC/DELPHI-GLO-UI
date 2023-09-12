@@ -1,23 +1,23 @@
 [
     {
         "cycleName": "C1",
-        "compUptimeCycle1": 92,
-        "compUptimeCycle2": 85,
-        "compUptimeCycle3": 70,
-        "compUptimeCycle4": "active"
+        "cycle1": 92,
+        "cycle2": 85,
+        "cycle3": 95,
+        "cycle4": "active"
     },
     {
         "cycleName": "C2",
-        "prodUptimeCycle1": 95,
-        "prodUptimeCycle2": 92,
-        "prodUptimeCycle3": 80,
-        "prodUptimeCycle4": "stable"
+        "cycle1": 95,
+        "cycle2": 92,
+        "cycle3": 80,
+        "cycle4": "waitingApproval"
     },
     {
         "cycleName": "Total Uptime",
-        "totalUptimeCycle1": 94,
-        "totalUptimeCycle2": 88,
-        "totalUptimeCycle3": 75,
-        "totalUptimeCycle4": "rate-estimation"
+        "cycle1": 94,
+        "cycle2": 88,
+        "cycle3": 75,
+        "cycle4": "rate-estimation"
     }
 ]

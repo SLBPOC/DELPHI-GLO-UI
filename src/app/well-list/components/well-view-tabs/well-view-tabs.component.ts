@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WellsService } from 'src/app/shared/services/wells.service';
 
@@ -13,6 +13,9 @@ export class WellViewTabsComponent {
   qo1!: number;
   loader = false;
   searchString: string = '';
+
+  @Output('wellDetails') wellDetails: EventEmitter<any> = new EventEmitter<any>();
+
   constructor(
     private service: WellsService,
     private _Activatedroute: ActivatedRoute
@@ -30,7 +33,8 @@ export class WellViewTabsComponent {
       this.wellInfo = resp;
       this.searchString = this.wellInfo.wellName;
       this.loader = false;
-      console.log(this.searchString, 'helooooooooooooo');
+      let detailedWellInfo = this.wellInfo;
+      this.wellDetails.emit(detailedWellInfo);
     });
   }
 }

@@ -127,6 +127,19 @@
         }
     }
 
+    .innertab-leftcont {
+        position: absolute;
+        left: 15px;
+        top: -12px;
+        z-index: 1000;
+
+        ul {
+            padding: 0px;
+            margin: 0px;
+            display: flex;
+        }
+    }
+
     .padding0 {
         padding: 0px;
     }
