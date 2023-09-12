@@ -5,28 +5,32 @@ import { WellsService } from 'src/app/shared/services/wells.service';
 @Component({
   selector: 'app-well-view-tabs',
   templateUrl: './well-view-tabs.component.html',
-  styleUrls: ['./well-view-tabs.component.scss']
+  styleUrls: ['./well-view-tabs.component.scss'],
 })
 export class WellViewTabsComponent {
   wellInfo!: any;
-  wellId!:any;
-  qo1!:number;
-  loader=false;
-  constructor(private service: WellsService,private _Activatedroute:ActivatedRoute) {
-    this.wellId=this._Activatedroute.snapshot.paramMap.get("id");
+  wellId!: any;
+  qo1!: number;
+  loader = false;
+  searchString: string = '';
+  constructor(
+    private service: WellsService,
+    private _Activatedroute: ActivatedRoute
+  ) {
+    this.wellId = this._Activatedroute.snapshot.paramMap.get('id');
     console.log(this.wellId);
   }
-  ngOnInit() { 
-    this.loader=true;   
+  ngOnInit() {
+    this.loader = true;
     this.getWellGeneralInfo();
   }
 
-  getWellGeneralInfo()
-  {
+  getWellGeneralInfo() {
     this.service.getWellInfo(this.wellId).subscribe((resp) => {
-      this.wellInfo = resp;  
-      this.loader=false;    
-      console.log(this.wellInfo);
+      this.wellInfo = resp;
+      this.searchString = this.wellInfo.wellName;
+      this.loader = false;
+      console.log(this.searchString, 'helooooooooooooo');
     });
   }
 }
