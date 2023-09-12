@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WellsService } from 'src/app/shared/services/wells.service';
 
@@ -12,6 +12,8 @@ export class WellViewTabsComponent {
   wellId!:any;
   qo1!:number;
   loader=false;
+
+  @Output('wellDetails') wellDetails: EventEmitter<any> = new EventEmitter<any>();
   constructor(private service: WellsService,private _Activatedroute:ActivatedRoute) {
     this.wellId=this._Activatedroute.snapshot.paramMap.get("id");
     console.log(this.wellId);
@@ -25,8 +27,9 @@ export class WellViewTabsComponent {
   {
     this.service.getWellInfo(this.wellId).subscribe((resp) => {
       this.wellInfo = resp;  
-      this.loader=false;    
-      console.log(this.wellInfo);
+      this.loader=false;
+      let detailedWellInfo = this.wellInfo;
+      this.wellDetails.emit(detailedWellInfo);
     });
   }
 }

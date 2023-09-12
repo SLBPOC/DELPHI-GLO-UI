@@ -11,6 +11,7 @@ import { AlgoLineChartComponent } from './components/algorithms-and-mitigation/c
 import { WellInfoComponent } from './components/well-info/well-info.component';
 import { WellDetailViewComponent } from './components/well-detail-view/well-detail-view.component';
 import { WellViewTabsComponent } from './components/well-view-tabs/well-view-tabs.component';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,12 @@ import { WellViewTabsComponent } from './components/well-view-tabs/well-view-tab
     WellDetailViewComponent,
     WellViewTabsComponent,
   ],
-  imports: [CommonModule, WellListRoutingModule, SharedModule],
+  imports: [
+    CommonModule, 
+    WellListRoutingModule, 
+    SharedModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,],
 })
 export class WellListModule {}
