@@ -5,15 +5,18 @@ import { AlertListComponent } from './components/alert-list/alert-list.component
 
 const routes: Routes = [
   {
-    path: '', component: AlertsComponent,
-    children: [
-      { path: '', component: AlertListComponent },
-
-    ]
-  }];
+    path: '',
+    component: AlertsComponent,
+    children: [{ path: '', component: AlertListComponent }],
+  },
+  {
+    path: ':WellName',
+    component: AlertListComponent,
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AlertsRoutingModule { }
+export class AlertsRoutingModule {}

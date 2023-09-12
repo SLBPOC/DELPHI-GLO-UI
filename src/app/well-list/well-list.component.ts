@@ -258,8 +258,6 @@ export class WellListComponent {
   }
   ApplyByFilter(value: string) {
     this.ApprovalMode = value;
-    console.log('ApplyByFilter');
-
     this.setGridData();
   }
   ApplyProductionFilter(value: string) {
