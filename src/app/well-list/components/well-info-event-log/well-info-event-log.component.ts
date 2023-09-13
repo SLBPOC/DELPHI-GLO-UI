@@ -159,7 +159,6 @@ export class WellInfoEventLogComponent {
     eventStatus: any,
     eventType: any
   ) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -194,7 +193,6 @@ export class WellInfoEventLogComponent {
       });
   }
   GetEventDetailsPage(pageIndex: any, pageSize: any) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -222,7 +220,6 @@ export class WellInfoEventLogComponent {
     eventStatus: any,
     eventType: any
   ) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -396,7 +393,6 @@ export class WellInfoEventLogComponent {
   }
 
   applyDateRangeFilter() {
-    debugger;
     let fromDate = this.selectedRangeValue.start;
     let toDate = this.selectedRangeValue.end;
     let startDate =
@@ -437,7 +433,6 @@ export class WellInfoEventLogComponent {
     this.type = event.value;
   }
   applyFilters(event: any) {
-    debugger;
 
     let status = this.status;
     let type = this.type;

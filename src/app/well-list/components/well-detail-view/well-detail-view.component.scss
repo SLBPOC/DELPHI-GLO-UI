@@ -230,14 +230,15 @@
             border: none;
 
             td.glsetpoint {
-                width: auto !important;
+                width: 30% !important;
+                text-align: center !important;
             }
 
-            .mat-mdc-row {
-                td:nth-child(2) {
-                    width: 20%;
-                }
-            }
+            // .mat-mdc-row {
+            //     td:nth-child(2) {
+            //         width: 20%;
+            //     }
+            // }
 
             .tableContainer {
                 .mdc-data-table__cell {

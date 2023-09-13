@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-// import { AlertList } from '../models/alert-list';
 import { Observable } from 'rxjs';
 
 const wellCycleData = '../../../../assets/json/well-cycle-status-data.json';
@@ -16,5 +15,9 @@ export class WellDetailViewService {
   getWellCycles(): Observable<any[]> {
     return this.http.get<any[]>(wellCycleData);
     // return this.http.get<AlertList[]>(this._apiUrl + 'api/alerts/');
+  }
+
+  getWellCycleDetails(id:number): Observable<any> {
+    return this.http.get<any>(this._apiUrl + 'api/Well/Id?id='+id);
   }
 }

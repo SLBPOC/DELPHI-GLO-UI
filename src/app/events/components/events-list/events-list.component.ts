@@ -149,7 +149,6 @@ export class EventsListComponent implements AfterViewInit {
     eventStatus: any,
     eventType: any
   ) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -180,7 +179,6 @@ export class EventsListComponent implements AfterViewInit {
       });
   }
   GetEventDetailsPage(pageIndex: any, pageSize: any) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -208,7 +206,6 @@ export class EventsListComponent implements AfterViewInit {
     eventStatus: any,
     eventType: any
   ) {
-    debugger;
     this.eventList = [];
     this.loading = true;
     this.model = [];
@@ -382,7 +379,6 @@ export class EventsListComponent implements AfterViewInit {
   }
 
   applyDateRangeFilter() {
-    debugger;
     let fromDate = this.selectedRangeValue.start;
     let toDate = this.selectedRangeValue.end;
     let startDate =
@@ -423,7 +419,6 @@ export class EventsListComponent implements AfterViewInit {
     this.type = event.value;
   }
   applyFilters(event: any) {
-    debugger;
 
     let status = this.status;
     let type = this.type;
