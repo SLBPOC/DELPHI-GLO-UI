@@ -20,6 +20,7 @@ import { DateRange } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { WellListModel } from 'src/app/shared/models/well-list';
+import { MatSelectChange } from '@angular/material/select';
 @Component({
   selector: 'app-custom-alert',
   templateUrl: './custom-alert.component.html',
@@ -42,17 +43,19 @@ export class CustomAlertComponent {
   endDate: any;
   disableSelect: any;
   selected!: Date;
+
   //well:any[]=[{wellId:"W001",wellName:"Well1" },{wellId:"W002",wellName:"Well2"},{wellId:"W003",wellName:"Well3"},];
   notification: any = ['Text', 'Email'];
   priority: any = ['High', 'Medium', 'Low'];
-  category: any = ['Fluid Pound Events', 'Current SPM', 'Current PF', 'Load'];
-  operator: any = ['=', '<>', '>', '<'];
+  category: any = ['GLIR', 'DP', 'THP', 'FLP', 'CHP'];
+  operator: any = ['=', '<>', '>', '<', '>=', '<='];
   //value:any=['Any numerical value','Max load','Min load'];
   isActive: boolean = true;
   customAlerts: customAlert[] = [];
   well!: WellListModel[];
   flag = false;
   customAlert: customAlert = {
+    WellId: 0,
     id: 0,
     wellName: '',
     customAlertName: '',
@@ -154,7 +157,14 @@ export class CustomAlertComponent {
       '-' +
       this.getSelectedDay(toDate?.getDate());
   }
-
+  SelectedWellid = 0;
+  SelectedWellText = '';
+  selectedValue(event: MatSelectChange) {
+    console.log(event.value);
+    console.log(event.source.triggerValue);
+    this.SelectedWellid = event.value;
+    this.SelectedWellText = event.source.triggerValue;
+  }
   onSubmit() {
     if (this.customAlertForm.value != null) {
       this.submitted = true;

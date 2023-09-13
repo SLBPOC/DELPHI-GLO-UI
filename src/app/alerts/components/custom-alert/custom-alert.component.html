@@ -30,9 +30,9 @@
                 <mat-select
                   placeholder="Select Well Name"
                   formControlName="wellName"
-                  (selectionChange)="anotherMethod($event)"
+                  (selectionChange)="selectedValue($event)"
                 >
-                  <mat-option *ngFor="let items of well" [value]="items"
+                  <mat-option *ngFor="let items of well" [value]="items.id"
                     >{{ items.wellName }}
                   </mat-option>
                 </mat-select>

@@ -9,6 +9,175 @@
   <div class="tabs1">
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
       <mat-tab label="Well Detail Info">
+        <mat-tab label="General Info">
+          <div class="well-content">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Qo</p>
+                    <span>{{ wellInfo.qOil }}STB/d</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>QI</p>
+                    <span>{{ wellInfo.qLiq }}STB/d</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Qw</p>
+                    <span>{{ wellInfo.qw }}STB/d</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Qg</p>
+                    <span>{{ wellInfo.qg }}MScf/d</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>WC</p>
+                    <span>{{ wellInfo.wc }}%</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>GL Injection Setpoint</p>
+                    <span>{{ wellInfo.gliSetPoint }} MScf/d</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Compressor Uptime</p>
+                    <span>{{ wellInfo.compressorUpTime }}%</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Device Uptime</p>
+                    <span>{{ wellInfo.deviceUpTime }}%</span>
+                  </mat-card>
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>
+                      Current Cycle Status/p>
+                      <span>{{ wellInfo.currentCycleStatus }}</span>
+                    </p></mat-card
+                  >
+                </div>
+                <div class="col-md-3">
+                  <mat-card>
+                    <p>Mode of Approval</p>
+                    <span>{{ wellInfo.approvalMode }}</span>
+                  </mat-card>
+                </div>
+                <div class="clear"></div>
+              </div>
+              <!-- <div class="mat-mdc-tab-body-wrapper-block">
+                <p>SLB needs to provide the GL image</p>
+              </div> -->
+              <div class="mat-mdc-tab-body-wrapper-block">
+                <div id="example">
+                  <div class="demo-section wide">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div id="agglomerations">
+                          <span
+                            href="#"
+                            id="canton"
+                            [matTooltip]="wellInfo.currentCycleStatus"
+                            matTooltipPosition="above"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="jakarta"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.currentCycleStatus"
+                            matTooltipPosition="above"
+                            id="mexico"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="delhi"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="karachi"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.currentCycleStatus"
+                            matTooltipPosition="above"
+                            id="newyork"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="saopaolo"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.currentCycleStatus"
+                            matTooltipPosition="above"
+                            id="bombay"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="losangeles"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.currentCycleStatus"
+                            matTooltipPosition="above"
+                            id="osaka"
+                          ></span>
+                          <span
+                            href="#"
+                            [matTooltip]="wellInfo.approvalMode"
+                            matTooltipPosition="above"
+                            id="moscow"
+                          ></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mat-mdc-tab-body-wrapper-block">
+                          <highcharts-chart
+                            [Highcharts]="Highcharts"
+                            [options]="chartOptions10"
+                            style="width: 100%; height: 400px; display: block"
+                          >
+                          </highcharts-chart>
+                          <highcharts-chart
+                            [Highcharts]="Highcharts"
+                            [options]="chartOptions"
+                            style="width: 100%; height: 400px; display: block"
+                          >
+                          </highcharts-chart>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
         <div class="well-content">
           <div class="container-fluid">
             <div class="row">
@@ -77,159 +246,12 @@
               <div class="clear"></div>
             </div>
             <div class="inner-tabs teli-control innertbsmargin">
-                <app-well-detail-view [wellId]="wellId"></app-well-detail-view>
+              <app-well-detail-view [wellId]="wellId"></app-well-detail-view>
             </div>
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="General Info">
-        <div class="well-content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Qo</p>
-                  <span>{{ wellInfo.qOil }}STB/d</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>QI</p>
-                  <span>{{ wellInfo.qLiq }}STB/d</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Qw</p>
-                  <span>{{ wellInfo.qw }}STB/d</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Qg</p>
-                  <span>{{ wellInfo.qg }}MScf/d</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>WC</p>
-                  <span>{{ wellInfo.wc }}%</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>GL Injection Setpoint</p>
-                  <span>{{ wellInfo.gliSetPoint }} MScf/d</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Compressor Uptime</p>
-                  <span>{{ wellInfo.compressorUpTime }}%</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Device Uptime</p>
-                  <span>{{ wellInfo.deviceUpTime }}%</span>
-                </mat-card>
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>
-                    Current Cycle Status/p>
-                    <span>{{ wellInfo.currentCycleStatus }}</span>
-                  </p></mat-card
-                >
-              </div>
-              <div class="col-md-3">
-                <mat-card>
-                  <p>Mode of Approval</p>
-                  <span>{{ wellInfo.approvalMode }}</span>
-                </mat-card>
-              </div>
-              <div class="clear"></div>
-            </div>
-            <!-- <div class="mat-mdc-tab-body-wrapper-block">
-              <p>SLB needs to provide the GL image</p>
-            </div> -->
-            <div class="mat-mdc-tab-body-wrapper-block">
-              <div id="example">
-                <div class="demo-section wide">
-                  <div id="agglomerations">
-                    <span
-                      href="#"
-                      id="canton"
-                      [matTooltip]="wellInfo.currentCycleStatus"
-                      matTooltipPosition="above"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="jakarta"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.currentCycleStatus"
-                      matTooltipPosition="above"
-                      id="mexico"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="delhi"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="karachi"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.currentCycleStatus"
-                      matTooltipPosition="above"
-                      id="newyork"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="saopaolo"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.currentCycleStatus"
-                      matTooltipPosition="above"
-                      id="bombay"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="losangeles"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.currentCycleStatus"
-                      matTooltipPosition="above"
-                      id="osaka"
-                    ></span>
-                    <span
-                      href="#"
-                      [matTooltip]="wellInfo.approvalMode"
-                      matTooltipPosition="above"
-                      id="moscow"
-                    ></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
+
       <mat-tab label="Telemetry & Control">
         <div class="well-content">
           <div class="container-fluid">
