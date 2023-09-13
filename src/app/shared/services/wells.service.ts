@@ -13,7 +13,7 @@ const wellData = '../../assets/json-data/welllist-data.json';
 export class WellsService {
 
   private apiUrl: string="https://localhost:50282/api/";
-  private _apiUrl: string="http://localhost:50283/api/v1/";
+  private _apiUrl: string="http://localhost:50283/";
     httpOptions = {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',

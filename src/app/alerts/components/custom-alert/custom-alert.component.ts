@@ -127,7 +127,6 @@ export class CustomAlertComponent {
     });
   }
   anotherMethod(ev: any) {
-    debugger;
     console.log(ev.value.id, ev.value.wellName);
   }
   getSelectedMonth(month: any) {

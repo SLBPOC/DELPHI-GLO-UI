@@ -13,8 +13,7 @@ export class WellViewTabsComponent {
   qo1!: number;
   loader = false;
   searchString: string = '';
-
-  @Output('wellDetails') wellDetails: EventEmitter<any> = new EventEmitter<any>();
+  wellDetails: any;
 
   constructor(
     private service: WellsService,
@@ -33,8 +32,6 @@ export class WellViewTabsComponent {
       this.wellInfo = resp;
       this.searchString = this.wellInfo.wellName;
       this.loader = false;
-      let detailedWellInfo = this.wellInfo;
-      this.wellDetails.emit(detailedWellInfo);
     });
   }
 }

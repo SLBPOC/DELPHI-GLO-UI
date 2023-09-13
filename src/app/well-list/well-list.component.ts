@@ -223,7 +223,6 @@ export class WellListComponent {
     this.model = [];
     this.model.push(obj);
     return this.model;
-    debugger;
   }
 
   ngAfterViewInit() {
