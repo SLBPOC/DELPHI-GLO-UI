@@ -160,8 +160,6 @@ export class CustomAlertComponent {
   SelectedWellid = 0;
   SelectedWellText = '';
   selectedValue(event: MatSelectChange) {
-    console.log(event.value);
-    console.log(event.source.triggerValue);
     this.SelectedWellid = event.value;
     this.SelectedWellText = event.source.triggerValue;
   }
@@ -177,7 +175,8 @@ export class CustomAlertComponent {
       this.startDate = this.startDate + customTime;
       this.endDate = this.endDate + customTime;
       obj = {
-        wellName: this.customAlertForm.value.wellName,
+        WellId: this.SelectedWellid,
+        wellName: this.SelectedWellText,
         customAlertName: this.customAlertForm.value.CustomAlertName,
         notificationType: this.customAlertForm.value.NotificationType,
         priority: this.customAlertForm.value.Priority,
