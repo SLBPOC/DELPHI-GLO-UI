@@ -94,7 +94,7 @@ export class WellInfoEventLogComponent {
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
     // 'Priority',
-    'WellName',
+    // 'WellName',
     'EventType',
     'EventStatus',
     'EventDescription',
@@ -433,7 +433,6 @@ export class WellInfoEventLogComponent {
     this.type = event.value;
   }
   applyFilters(event: any) {
-
     let status = this.status;
     let type = this.type;
     this.GetEventListWithDateFilters('', '', type, status);
