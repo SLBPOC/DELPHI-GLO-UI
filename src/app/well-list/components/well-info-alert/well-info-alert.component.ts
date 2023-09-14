@@ -39,10 +39,12 @@ export class WellInfoAlertComponent {
   dataSource: any;
   // displayedColumns: string[] = ["stat", "WellName", "alertLevel", "TimeandDate", "AlertDescription", "alertStatus", "action"]
   displayedColumns: string[] = [
-    // 'stat',
+    'stat',
     // 'WellName',
+    'alertLevel',
     'TimeandDate',
     'AlertDescription',
+    'alertStatus',
     'action',
   ];
   highCount = 0;
