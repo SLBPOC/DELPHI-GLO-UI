@@ -176,6 +176,7 @@ export class CustomAlertComponent {
       this.endDate = this.endDate + customTime;
       obj = {
         WellId: this.SelectedWellid,
+        
         wellName: this.SelectedWellText,
         customAlertName: this.customAlertForm.value.CustomAlertName,
         notificationType: this.customAlertForm.value.NotificationType,
