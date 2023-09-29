@@ -17,19 +17,19 @@ export class CustomAlertService {
   constructor(private http: HttpClient) { }
 
   addCustomAlert(customAlert:customAlert):Observable<customAlert>{
-    return this.http.post<customAlert>(this.apiUrl + 'CustomAlert/Create', customAlert);
+    return this.http.post<customAlert>(this.apiUrl + 'api/CustomAlert/Create', customAlert);
    }
    displayDetails():Observable<customAlert[]>{
-    return this.http.get<customAlert[]>(this.apiUrl + 'CustomAlert/Get');
+    return this.http.get<customAlert[]>(this.apiUrl + 'api/CustomAlert/Get');
   }
   deleteCustomAlert(id:number):Observable<customAlert>{
-    return this.http.delete<customAlert>(this.apiUrl + 'CustomAlert/Delete?Id=' + id);
+    return this.http.delete<customAlert>(this.apiUrl + 'api/CustomAlert/Delete?Id=' + id);
   }
   isActiveCustomAlert(id:number,IsActive:boolean):Observable<customAlert>{
-    return this.http.put<customAlert>(this.apiUrl + 'CustomAlert/IsActive?Id=' + id +'&IsActive='+ IsActive,"");
+    return this.http.put<customAlert>(this.apiUrl + 'api/CustomAlert/IsActive?Id=' + id +'&IsActive='+ IsActive,"");
   }
   getDetails(id:number):Observable<customAlert>{
-    return this.http.get<customAlert>(this.apiUrl + 'CustomAlert/GetById?Id=' + id);
+    return this.http.get<customAlert>(this.apiUrl + 'api/CustomAlert/GetById?Id=' + id);
   }
 
   getWellName():Observable<WellListModel[]>{
